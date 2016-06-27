@@ -5,8 +5,15 @@
 // 5. After 25 repeats, display results.
 //
 // Global Variables:
-var imagesArray = [Array of images generated from constructor function]
-var choicesArray = [Holds the last iteration of choices by number]
+
+// Array of images generated from constructor function
+var imagesArray = []
+
+// Holds the current iteration of choices by number
+var choicesArray = []
+
+// Holds the choices for the previous iteration, 20 is imagesArray.length + 1
+var prevChoicesArray = [21, 21, 21]
 
 // Functions Needed:
 constructor for images {
@@ -28,12 +35,13 @@ var randomNumber = function() {
 var getImages = function (
   for(a given number of items - i) {
     select an image# via randomNumber
-    if(image# in choicesArray)
+    if(image# in prevChoicesArray)
       {select another number}
       else {
         put that number in the choicesArray[i]
         update the DOM with the new image
-      THIS WONT WORK IF THE ARRAY IS OVERWRITTEN AS THE FUNCTION RUNS: ITEMS WILL REPEAT}
+      }
+    once the if loop is done choosing new pictures, loop through prevChoicesArray and replace the numbers with the numbers in choicesArray.
   }
 
 var displayResults = function() {
@@ -61,3 +69,11 @@ var handleClick = function() {
     displayResults();
   }
 }
+
+// Create all image objects
+
+
+// Event Handler
+
+
+// Call functions here:

@@ -1,3 +1,5 @@
+'use strict';
+
 // 1. Show 3 random images to user
 // 2. User clicks on one image of the three
 // 3. Three new images are displayed, without repeating
@@ -7,13 +9,16 @@
 // Global Variables:
 
 // Array of images generated from constructor function
-var imagesArray = []
+var imagesArray = [];
 
 // Holds the current iteration of choices by number
-var choicesArray = []
+var choicesArray = [];
 
 // Holds the choices for the previous iteration, 20 is imagesArray.length + 1
-var prevChoicesArray = [21, 21, 21]
+var prevChoicesArray = [21, 21, 21];
+
+// Where images will be added.
+var ulEl = document.getElementById('display_images')
 
 // Functions Needed:
 function productImage(imgName, imgFilePath, numberOfClicks, timesShown) {
@@ -22,7 +27,7 @@ function productImage(imgName, imgFilePath, numberOfClicks, timesShown) {
   this.numberOfClicks = numberOfClicks;
   this.timesShown = timesShown;
 
-  console.dir(this);
+  // console.dir(this);
   imagesArray.push(this);
 }
 
@@ -41,18 +46,28 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-// var getImages = function (
-//   for(a given number of items - i) {
-//     select an image# via randomNumber
-//     if(image# in prevChoicesArray)
-//       {select another number}
-//       else {
-//         put that number in the choicesArray[i]
-//         update the DOM with the new image
-//       }
-//     once the if loop is done choosing new pictures, loop through prevChoicesArray and replace the numbers with the numbers in choicesArray.
-//   }
-//
+function getImages() {
+  ulEl.innerHTML = '';
+  var liEl = document.createElement('li');
+  var choicesCounter = 0;
+  while(choicesCounter < 3) {
+    for(var i = 0; i < prevChoicesArray.length; i++) {
+      var newInt = getRandomInt(0, 20);
+      if(newInt === prevChoicesArray[i] || newInt === choicesArray[i]) {
+        break;
+      } else {
+        choicesArray[i] = newInt;
+        choicesCounter++;
+        buildElement('img', '', liEl, 'src', imagesArray[newInt].imgFilePath);
+        ulEl.appendChild(liEl);
+      }
+    }
+  }
+  for(var j = 0; j < choicesArray.length; j++) {
+    prevChoicesArray[j] = choicesArray[j];
+  }
+}
+
 // var displayResults = function() {
 //   for(each item in imagesArray) {
 //     calculate the percentage of time that the item was clicked if shown
@@ -102,6 +117,7 @@ var water_can = new productImage('watering can', 'img/water-can.jpg', 0, 0);
 var wine_glass = new productImage('wine glass', 'img/wine-glass.jpg', 0, 0);
 
 // Event Handler
-
+// display_images.addEventListener('click', handleClick);
 
 // Call functions here:
+getImages();

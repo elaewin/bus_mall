@@ -25,10 +25,15 @@ function productImage(imgName, imgFilePath, numberOfClicks, timesShown) {
   imagesArray.push(this);
 }
 
-// var buildElement = function() {
-//   add an item to the DOM
-// }
-//
+// Builds an element and adds it to another element, attribute optional
+function buildElement(kind, content, where, attName, attValue) {
+  var x = document.createElement(kind);
+  x.textContent = content;
+  if(attName && attValue) {
+    x.setAttribute(attName, attValue);
+  }
+  where.appendChild(x);
+}
 
 // Returns a random integer between min (included) and max (excluded)
 function getRandomInt(min, max) {

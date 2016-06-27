@@ -22,6 +22,7 @@ function productImage(imgName, imgFilePath, numberOfClicks, timesShown) {
   this.numberOfClicks = numberOfClicks;
   this.timesShown = timesShown;
 
+  console.dir(this);
   imagesArray.push(this);
 }
 
@@ -78,8 +79,7 @@ function getRandomInt(min, max) {
 //   }
 // }
 
-// Create all image objects
-
+// Create all productImage objects
 var bag = new productImage('suitcase', 'img/bag.jpg', 0, 0);
 var banana = new productImage('banana cutter', 'img/banana.jpg', 0, 0);
 var bathroom = new productImage('ipad stand', 'img/bathroom.jpg', 0, 0);
@@ -88,10 +88,10 @@ var breakfast = new productImage('all-in-one breakfast', 'img/breakfast.jpg', 0,
 var bubblegum = new productImage('meatball bubblegum', 'img/bubblegum.jpg', 0, 0);
 var chair = new productImage('chair', 'img/chair.jpg', 0, 0);
 var cthulhu = new productImage('cthulhu action set', 'img/cthulhu.jpg', 0, 0);
-var dog-duck = new productImage('dog duck bill', 'img/dog-duck.jpg', 0, 0);
+var dog_duck = new productImage('dog duck bill', 'img/dog-duck.jpg', 0, 0);
 var dragon = new productImage('dragon meat', 'img/dragon.jpg', 0, 0);
 var pen = new productImage('pen utensils', 'img/pen.jpg', 0, 0);
-var pet-sweep = new productImage('pet sweeper', 'img/pet-sweep.jpg', 0, 0);
+var pet_sweep = new productImage('pet sweeper', 'img/pet-sweep.jpg', 0, 0);
 var scissors = new productImage('pizza scissors', 'img/scissors.jpg', 0, 0);
 var shark = new productImage('shark sleeping bag', 'img/shark.jpg', 0, 0);
 var sweep = new productImage('baby sweeper', 'img/sweep.png', 0, 0);

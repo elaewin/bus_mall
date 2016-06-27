@@ -29,11 +29,12 @@ function productImage(imgName, imgFilePath, numberOfClicks, timesShown) {
 //   add an item to the DOM
 // }
 //
-// var randomNumber = function() {
-//   select a random number between 1 and 20
-//   (get from MDN Math.random() page!)
-// }
-//
+
+// Returns a random integer between min (included) and max (excluded)
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
 // var getImages = function (
 //   for(a given number of items - i) {
 //     select an image# via randomNumber

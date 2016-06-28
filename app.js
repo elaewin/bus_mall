@@ -11,6 +11,7 @@ var choicesArray = [];
 var prevChoicesArray = [21, 21, 21];
 var clickCounter = 0;
 
+var namesArray = [];
 var totalClicksArray = [];
 var percentagesArray = [];
 
@@ -25,10 +26,12 @@ function productImage(imgFilePath) {
   imagesArray.push(this);
 }
 
-// Builds array of productImages
+// Builds array of productImages and creates namesArray
 function buildImageObjects(array) {
   for(var i = 0; i < array.length; i++) {
     imagesArray[i] = (new productImage(array[i]));
+    var itemName = imagesArray[i].imgFilePath.split('.')[0];
+    namesArray[i] = itemName;
   }
 }
 
@@ -112,11 +115,8 @@ var displayStats = function() {
   for(var i = 0; i < imagesArray.length; i++) {
     var imageStats = calcClickPercent(imagesArray[i]);
     var percentage = imageStats[0].toFixed(2);
-    var itemName = imagesArray[i].imgFilePath.split('.')[0];
     var itemViews = imageStats[1];
     var itemClicks = imageStats[2];
-    // write # of clicks to DOM
-    // write percentage of clicks to DOM
   }
 };
 
@@ -126,15 +126,12 @@ var handleClick = function(event) {
     for(var i = 0; i < imagesArray.length; i++) {
       if(clicked.split('img/')[1] === imagesArray[i].imgFilePath) {
         imagesArray[i].clicks++;
-        console.log('clicks', imagesArray[i].clicks);
         clickCounter++;
-        console.log('counter', clickCounter);
         getImages();
       }
     }
   } else {
     display_images.removeEventListener('click', handleClick);
-    // console.log('no more clicks!');
     displayStats();
   }
 };
@@ -143,7 +140,5 @@ var handleClick = function(event) {
 display_images.addEventListener('click', handleClick);
 
 // Call functions here:
-
 buildImageObjects(imageFilePaths);
-console.dir(imagesArray);
 getImages();

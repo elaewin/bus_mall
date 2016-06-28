@@ -130,11 +130,12 @@ var handleClick = function(event) {
   if(clickCounter < 25) {
     getImages();
     clickCounter++;
+    console.log('counter', clickCounter);
   }
-  else {
-    display_images.removeEventHandler('click', clickCounter);
-    displayResults();
-  }
+  // else {
+  //   display_images.removeEventHandler('click', clickCounter);
+  //   displayResults();
+  // }
 };
 
 // Create all productImage objects
@@ -160,7 +161,7 @@ var water_can = new productImage('watering can', 'img/water-can.jpg', 0, 0);
 var wine_glass = new productImage('wine glass', 'img/wine-glass.jpg', 0, 0);
 
 // Event Handler
-// display_images.addEventListener('click', handleClick);
+display_images.addEventListener('click', handleClick);
 
 // Call functions here:
 getImages();

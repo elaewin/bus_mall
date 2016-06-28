@@ -23,12 +23,17 @@ p {
   line-height: 24px;
 }
 
-ul li {
+li {
   float: left;
   margin-right: 30px;
   margin-bottom: 30px;
 }
 
-ul li:last-child {
+li:last-child {
   margin-right: 0px;
+}
+
+img {
+  width: 300px;
+  height: 300px;
 }

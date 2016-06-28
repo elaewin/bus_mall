@@ -85,17 +85,23 @@ var checkRefs = function() {
   }
 };
 
-var displayResults = function() {
-  for(each item in imagesArray) {
-    calculate the percentage of time that the item was clicked if shown
-    write # of clicks to DOM
-    write percentage of clicks to DOM
+// var displayResults = function() {
+//   for(each item in imagesArray) {
+//     calculate the percentage of time that the item was clicked if shown
+//     write # of clicks to DOM
+//     write percentage of clicks to DOM
+//   }
+// }
+
+var calcClickPercent = function() {
+  for(var i = 0; i < imagesArray.length; i++) {
+    var currentImage = imagesArray[i],
+    var views = currentImage.timesShown;
+    var clicks = currentImage.numberOfClicks;
+    var percentage = clicks / views;
+    return [clicks, percentage]
   }
 }
-
-// var calcClickPercent = function() {
-//   this is the number of times clicked divided by the number of times shown
-// }
 //
 // // HANDLER FUNCTION: THIS WILL HAVE TO BE AN ANON FUNCTION
 // var handleClick = function() {

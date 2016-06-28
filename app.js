@@ -40,7 +40,7 @@ function buildElement(kind, content, where, attName, attValue, id) {
   var x = document.createElement(kind);
   x.textContent = content;
   if(id) {
-    x.id = (id + 1);
+    x.id = id;
   }
   if(attName && attValue) {
     x.setAttribute(attName, attValue);
@@ -87,7 +87,7 @@ function getImages() {
     var liEl = document.createElement('li');
     choicesArray[choicesCounter] = newInt;
     imagesArray[newInt].timesShown++;
-    buildElement('img', '', liEl, 'src', imagesArray[newInt].imgFilePath, newInt);
+    buildElement('img', '', liEl, 'src', imagesArray[newInt].imgFilePath, imagesArray[newInt].imgName);
     ulEl.appendChild(liEl);
     choicesCounter++;
     // console.log('counter', choicesCounter);
@@ -127,18 +127,23 @@ var checkRefs = function() {
 // };
 //
 var handleClick = function(event) {
-  console.log('event target', event.target);
-  // imagesArray[(imageClicked - 1)].numberOfClicks++;
+  var clickedImgName = event.target.id;
+  console.log('event target', event.target.id);
   if(clickCounter < 25) {
-    getImages();
-    clickCounter++;
-    // console.log('counter', clickCounter);
+    for(var i = 0; i < imagesArray.length; i++) {
+      if(clickedImgName === imagesArray[i].imgName) {
+        imagesArray[i].numberOfClicks++;
+        console.log('clicks', imagesArray[i].numberOfClicks);
+        clickCounter++;
+        console.log('counter', clickCounter);
+        getImages();
+      }
+    }
+  } else {
+    display_images.removeEventHandler('click', clickCounter);
+  //   displayResults();
   }
 };
-  // else {
-  //   display_images.removeEventHandler('click', clickCounter);
-  //   displayResults();
-  // }
 
 // Create all productImage objects
 var bag = new productImage('bag', 'suitcase', 'img/bag.jpg', 0, 0);

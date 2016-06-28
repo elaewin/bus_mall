@@ -108,20 +108,23 @@ var calcClickPercent = function(image) {
   var views = image.timesShown;
   var clicks = image.numberOfClicks;
   var percentage = clicks / views;
-  return [percentage, clicks, views];
+  return [percentage, views, clicks];
 };
 
-// var displayResults = function() {
-//   for(var i = 0; i < imagesArray.length; i++) {
-//     var image = imagesArray[i];
-//     var percent = calClickPercent();
-//     console.log('shown to user', image.timesShown);
-//     console.log('clicks', image.numberOfClicks);
-//     console.log('percentage', percent);
-//     // write # of clicks to DOM
-//     // write percentage of clicks to DOM
-//   }
-// };
+var displayResults = function() {
+  for(var i = 0; i < imagesArray.length; i++) {
+    console.log(imagesArray[i].imgVerboseName);
+    var imageStats = calcClickPercent(imagesArray[i]);
+    var percentage = imageStats[0];
+    console.log('percentage', percentage);
+    var views = imageStats[1];
+    console.log('shown to user', views);
+    var clicks = imageStats[2];
+    console.log('clicks', clicks);
+    // write # of clicks to DOM
+    // write percentage of clicks to DOM
+  }
+};
 
 var handleClick = function(event) {
   var clickedImgName = event.target.id;
@@ -138,7 +141,7 @@ var handleClick = function(event) {
     }
   } else {
     display_images.removeEventListener('click', handleClick);
-    console.log('no more clicks!')
+    console.log('no more clicks!');
     displayResults();
   }
 };

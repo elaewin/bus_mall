@@ -18,7 +18,7 @@ var ulEl = document.getElementById('display_images');
 
 // Constructor for image objects.
 function productImage(imgFilePath) {
-  this.imgFilePath = 'img/' + imgFilePath;
+  this.imgFilePath = imgFilePath;
   this.clicks = 0;
   this.views = 0;
 
@@ -85,8 +85,9 @@ function displayImages() {
   ulEl.innerHTML = '';
   for(var i = 0; i < choicesArray.length; i++) {
     var imgNumber = choicesArray[i];
+    var source = 'img/' + imagesArray[imgNumber].imgFilePath;
     var liEl = document.createElement('li');
-    buildElement('img', '', liEl, 'src', imagesArray[imgNumber].imgFilePath);
+    buildElement('img', '', liEl, 'src', source);
     ulEl.appendChild(liEl);
   }
 }
@@ -101,6 +102,9 @@ var calcClickPercent = function(image) {
   var views = image.views;
   var clicks = image.clicks;
   var percentage = clicks / views;
+  if(typeof(percentage) === NaN) {
+    percentage = 0;
+  }
   return [percentage, views, clicks];
 };
 
@@ -108,11 +112,9 @@ var displayStats = function() {
   for(var i = 0; i < imagesArray.length; i++) {
     var imageStats = calcClickPercent(imagesArray[i]);
     var percentage = imageStats[0].toFixed(2);
-    console.log('percentage', percentage);
+    var itemName = imagesArray[i].imgFilePath.split('.')[0];
     var itemViews = imageStats[1];
-    console.log('views', itemViews);
     var itemClicks = imageStats[2];
-    console.log('clicks', itemClicks);
     // write # of clicks to DOM
     // write percentage of clicks to DOM
   }
@@ -122,7 +124,7 @@ var handleClick = function(event) {
   var clicked = event.target.src;
   if(clickCounter < 25) {
     for(var i = 0; i < imagesArray.length; i++) {
-      if('img/' + clicked.split('img/')[1] === imagesArray[i].imgFilePath) {
+      if(clicked.split('img/')[1] === imagesArray[i].imgFilePath) {
         imagesArray[i].clicks++;
         console.log('clicks', imagesArray[i].clicks);
         clickCounter++;

@@ -18,7 +18,7 @@ var choicesArray = [];
 var prevChoicesArray = [21, 21, 21];
 
 // Where images will be added.
-var ulEl = document.getElementById('display_images')
+var ulEl = document.getElementById('display_images');
 
 // Functions Needed:
 function productImage(imgName, imgFilePath, numberOfClicks, timesShown) {
@@ -48,34 +48,51 @@ function getRandomInt(min, max) {
 
 function getImages() {
   ulEl.innerHTML = '';
-  var liEl = document.createElement('li');
   var choicesCounter = 0;
   while(choicesCounter < 3) {
-    for(var i = 0; i < prevChoicesArray.length; i++) {
+    var isRepeatNumber = true;
+    while(isRepeatNumber === true) {
+      isRepeatNumber = false;
       var newInt = getRandomInt(0, 20);
-      if(newInt === prevChoicesArray[i] || newInt === choicesArray[i]) {
-        break;
-      } else {
-        choicesArray[i] = newInt;
-        choicesCounter++;
-        buildElement('img', '', liEl, 'src', imagesArray[newInt].imgFilePath);
-        ulEl.appendChild(liEl);
+      console.log('newInt', newInt);
+      for(var j = 0; j < prevChoicesArray.length; j++) { // Make this a function!
+        if(newInt === prevChoicesArray[j]) {
+          isRepeatNumber = true;
+        }
+      }
+      for(var k = 0; k < choicesArray.length; k++) { // Make this a function!
+        if(newInt === choicesArray[k]) {
+          isRepeatNumber = true;
+        }
       }
     }
+    var liEl = document.createElement('li');
+    choicesArray[choicesCounter] = newInt;
+    imagesArray[newInt].timesShown++;
+    buildElement('img', '', liEl, 'src', imagesArray[newInt].imgFilePath);
+    ulEl.appendChild(liEl);
+    choicesCounter++;
+    console.log('counter', choicesCounter);
   }
-  for(var j = 0; j < choicesArray.length; j++) {
-    prevChoicesArray[j] = choicesArray[j];
+  for(var i = 0; i < choicesArray.length; i++) {
+    prevChoicesArray[i] = choicesArray[i];
   }
 }
 
-// var displayResults = function() {
-//   for(each item in imagesArray) {
-//     calculate the percentage of time that the item was clicked if shown
-//     write # of clicks to DOM
-//     write percentage of clicks to DOM
-//   }
-// }
-//
+var checkRefs = function() {
+  for(var i = 0; i < imagesArray.length; i++) {
+    console.log('image reps', imagesArray[i].timesShown);
+  }
+};
+
+var displayResults = function() {
+  for(each item in imagesArray) {
+    calculate the percentage of time that the item was clicked if shown
+    write # of clicks to DOM
+    write percentage of clicks to DOM
+  }
+}
+
 // var calcClickPercent = function() {
 //   this is the number of times clicked divided by the number of times shown
 // }

@@ -24,8 +24,9 @@ var clickCounter = 0;
 var ulEl = document.getElementById('display_images');
 
 // Constructor for image objects.
-function productImage(imgName, imgFilePath, numberOfClicks, timesShown) {
+function productImage(imgName, imgVerboseName, imgFilePath, numberOfClicks, timesShown) {
   this.imgName = imgName;
+  this.imgVerboseName = imgVerboseName;
   this.imgFilePath = imgFilePath;
   this.numberOfClicks = numberOfClicks;
   this.timesShown = timesShown;
@@ -39,7 +40,7 @@ function buildElement(kind, content, where, attName, attValue, id) {
   var x = document.createElement(kind);
   x.textContent = content;
   if(id) {
-    x.id = id;
+    x.id = (id + 1);
   }
   if(attName && attValue) {
     x.setAttribute(attName, attValue);
@@ -126,39 +127,40 @@ var checkRefs = function() {
 // };
 //
 var handleClick = function(event) {
-  imagesArray[event.target.id].numberOfClicks++;
+  console.log('event target', event.target);
+  // imagesArray[(imageClicked - 1)].numberOfClicks++;
   if(clickCounter < 25) {
     getImages();
     clickCounter++;
-    console.log('counter', clickCounter);
+    // console.log('counter', clickCounter);
   }
+};
   // else {
   //   display_images.removeEventHandler('click', clickCounter);
   //   displayResults();
   // }
-};
 
 // Create all productImage objects
-var bag = new productImage('suitcase', 'img/bag.jpg', 0, 0);
-var banana = new productImage('banana cutter', 'img/banana.jpg', 0, 0);
-var bathroom = new productImage('ipad stand', 'img/bathroom.jpg', 0, 0);
-var boots = new productImage('rain boots', 'img/boots.jpg', 0, 0);
-var breakfast = new productImage('all-in-one breakfast', 'img/breakfast.jpg', 0, 0);
-var bubblegum = new productImage('meatball bubblegum', 'img/bubblegum.jpg', 0, 0);
-var chair = new productImage('chair', 'img/chair.jpg', 0, 0);
-var cthulhu = new productImage('cthulhu action set', 'img/cthulhu.jpg', 0, 0);
-var dog_duck = new productImage('dog duck bill', 'img/dog-duck.jpg', 0, 0);
-var dragon = new productImage('dragon meat', 'img/dragon.jpg', 0, 0);
-var pen = new productImage('pen utensils', 'img/pen.jpg', 0, 0);
-var pet_sweep = new productImage('pet sweeper', 'img/pet-sweep.jpg', 0, 0);
-var scissors = new productImage('pizza scissors', 'img/scissors.jpg', 0, 0);
-var shark = new productImage('shark sleeping bag', 'img/shark.jpg', 0, 0);
-var sweep = new productImage('baby sweeper', 'img/sweep.png', 0, 0);
-var tauntaun = new productImage('tauntaun sleeping bag', 'img/tauntaun.jpg', 0, 0);
-var unicorn = new productImage('unicorn meat', 'img/unicorn.jpg', 0, 0);
-var usb = new productImage('USB tentacle', 'img/usb.png', 0, 0);
-var water_can = new productImage('watering can', 'img/water-can.jpg', 0, 0);
-var wine_glass = new productImage('wine glass', 'img/wine-glass.jpg', 0, 0);
+var bag = new productImage('bag', 'suitcase', 'img/bag.jpg', 0, 0);
+var banana = new productImage('banana', 'banana cutter', 'img/banana.jpg', 0, 0);
+var bathroom = new productImage('bathroom', 'ipad stand', 'img/bathroom.jpg', 0, 0);
+var boots = new productImage('boots', 'rain boots', 'img/boots.jpg', 0, 0);
+var breakfast = new productImage('breakfast', 'all-in-one breakfast', 'img/breakfast.jpg', 0, 0);
+var bubblegum = new productImage('bubblegum', 'meatball bubblegum', 'img/bubblegum.jpg', 0, 0);
+var chair = new productImage('chair', 'chair', 'img/chair.jpg', 0, 0);
+var cthulhu = new productImage('cthulhu', 'cthulhu action set', 'img/cthulhu.jpg', 0, 0);
+var dog_duck = new productImage('dog_duck', 'dog duck bill muzzle', 'img/dog-duck.jpg', 0, 0);
+var dragon = new productImage('dragon', 'dragon meat', 'img/dragon.jpg', 0, 0);
+var pen = new productImage('pen', 'pen utensils', 'img/pen.jpg', 0, 0);
+var pet_sweep = new productImage('pet_sweep', 'pet sweeper', 'img/pet-sweep.jpg', 0, 0);
+var scissors = new productImage('pizza', 'pizza scissors', 'img/scissors.jpg', 0, 0);
+var shark = new productImage('shark', 'shark sleeping bag', 'img/shark.jpg', 0, 0);
+var sweep = new productImage('sweep', 'baby sweeper', 'img/sweep.png', 0, 0);
+var tauntaun = new productImage('tauntaun', 'tauntaun sleeping bag', 'img/tauntaun.jpg', 0, 0);
+var unicorn = new productImage('unicorn', 'unicorn meat', 'img/unicorn.jpg', 0, 0);
+var usb = new productImage('usb', 'USB tentacle', 'img/usb.png', 0, 0);
+var water_can = new productImage('water_can', 'watering can', 'img/water-can.jpg', 0, 0);
+var wine_glass = new productImage('wine_glass', 'wine glass', 'img/wine-glass.jpg', 0, 0);
 
 // Event Handler
 display_images.addEventListener('click', handleClick);

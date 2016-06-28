@@ -17,6 +17,9 @@ var choicesArray = [];
 // Holds the choices for the previous iteration, 20 is imagesArray.length + 1
 var prevChoicesArray = [21, 21, 21];
 
+// counts # of times user has clicked
+var clickCounter = 0;
+
 // Where images will be added.
 var ulEl = document.getElementById('display_images');
 
@@ -32,9 +35,12 @@ function productImage(imgName, imgFilePath, numberOfClicks, timesShown) {
 }
 
 // Builds an element and adds it to another element, attribute optional
-function buildElement(kind, content, where, attName, attValue) {
+function buildElement(kind, content, where, attName, attValue, id) {
   var x = document.createElement(kind);
   x.textContent = content;
+  if(id) {
+    x.id = id;
+  }
   if(attName && attValue) {
     x.setAttribute(attName, attValue);
   }
@@ -80,7 +86,7 @@ function getImages() {
     var liEl = document.createElement('li');
     choicesArray[choicesCounter] = newInt;
     imagesArray[newInt].timesShown++;
-    buildElement('img', '', liEl, 'src', imagesArray[newInt].imgFilePath);
+    buildElement('img', '', liEl, 'src', imagesArray[newInt].imgFilePath, newInt);
     ulEl.appendChild(liEl);
     choicesCounter++;
     // console.log('counter', choicesCounter);
@@ -97,41 +103,39 @@ var checkRefs = function() {
   }
 };
 
-var displayResults = function() {
-  for(var i = 0; i < imagesArray.length; i++) {
-    var image = imagesArray[i];
-    var percent = calClickPercent();
-    console.log('shown to user', image.timesShown);
-    console.log('clicks', image.numberOfClicks);
-    console.log('percentage', percent);
-    // write # of clicks to DOM
-    // write percentage of clicks to DOM
-  }
-};
-
-var calcClickPercent = function() {
-  for(var i = 0; i < imagesArray.length; i++) {
-    var currentImage = imagesArray[i];
-    var views = currentImage.timesShown;
-    var clicks = currentImage.numberOfClicks;
-    var percentage = clicks / views;
-    return percentage;
-  }
-};
+// var displayResults = function() {
+//   for(var i = 0; i < imagesArray.length; i++) {
+//     var image = imagesArray[i];
+//     var percent = calClickPercent();
+//     console.log('shown to user', image.timesShown);
+//     console.log('clicks', image.numberOfClicks);
+//     console.log('percentage', percent);
+//     // write # of clicks to DOM
+//     // write percentage of clicks to DOM
+//   }
+// };
 //
-// // HANDLER FUNCTION: THIS WILL HAVE TO BE AN ANON FUNCTION
-// var handleClick = function() {
-//   this will contain the other functions that will run on click.
-//   var clickCounter = 0 // counts # of times user has clicked
-//   if(clickCounter < 25) {
-//     getImages();
-//     clickCounter++;
+// var calcClickPercent = function() {
+//   for(var i = 0; i < imagesArray.length; i++) {
+//     var currentImage = imagesArray[i];
+//     var views = currentImage.timesShown;
+//     var clicks = currentImage.numberOfClicks;
+//     var percentage = clicks / views;
+//     return percentage;
 //   }
-//   if(clickCounter === 25) {
-//     turn off handleClick;
-//     displayResults();
-//   }
-// }
+// };
+//
+var handleClick = function(event) {
+  imagesArray[event.target.id].numberOfClicks++;
+  if(clickCounter < 25) {
+    getImages();
+    clickCounter++;
+  }
+  else {
+    display_images.removeEventHandler('click', clickCounter);
+    displayResults();
+  }
+};
 
 // Create all productImage objects
 var bag = new productImage('suitcase', 'img/bag.jpg', 0, 0);

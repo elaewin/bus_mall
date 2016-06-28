@@ -13,7 +13,7 @@ var clickCounter = 0;
 
 var namesArray = [];
 var totalClicksArray = [];
-var percentagesArray = [];
+var percentsArray = [];
 
 var ulEl = document.getElementById('display_images');
 
@@ -70,15 +70,12 @@ function getImages() {
     var newInt = getRandomInt(0, 20);
     while(checkContent(newInt, prevChoicesArray) || checkContent(newInt, choicesArray)) {
       newInt = getRandomInt(0, 20);
-      console.log(newInt);
     }
     choicesArray[choicesCounter] = newInt;
     imagesArray[newInt].views++;
     choicesCounter++;
   }
   displayImages();
-  console.log('prevChoicesArray', prevChoicesArray);
-  console.log('choicesArray', choicesArray);
   for(var i = 0; i < choicesArray.length; i++) {
     prevChoicesArray[i] = choicesArray[i];
   }
@@ -101,7 +98,7 @@ var checkRefs = function() {
   }
 };
 
-var calcClickPercent = function(image) {
+var calcClickStats = function(image) {
   var views = image.views;
   var clicks = image.clicks;
   var percentage = clicks / views;
@@ -113,10 +110,11 @@ var calcClickPercent = function(image) {
 
 var displayStats = function() {
   for(var i = 0; i < imagesArray.length; i++) {
-    var imageStats = calcClickPercent(imagesArray[i]);
+    var imageStats = calcClickStats(imagesArray[i]);
     var percentage = imageStats[0].toFixed(2);
-    var itemViews = imageStats[1];
-    var itemClicks = imageStats[2];
+    percentsArray[i] = percentage;
+    var itemViews = imageStats[1]; // should be able to get this from imagesArray
+    var itemClicks = imageStats[2]; // ditto this.
   }
 };
 

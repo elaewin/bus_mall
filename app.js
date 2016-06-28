@@ -14,6 +14,7 @@ var clickCounter = 0;
 var namesArray = [];
 var totalClicksArray = [];
 var percentsArray = [];
+var totalViewsArray = [];
 
 var ulEl = document.getElementById('display_images');
 var resultsButton = document.getElementById('results');
@@ -110,19 +111,21 @@ var calcClickStats = function(image) {
   return [percentage, views, clicks];
 };
 
-var displayStats = function() {
+var generateStats = function() {
   for(var i = 0; i < imagesArray.length; i++) {
     var imageStats = calcClickStats(imagesArray[i]);
     var percentage = imageStats[0].toFixed(2);
     percentsArray[i] = percentage;
-    var itemViews = imageStats[1]; // should be able to get this from imagesArray
-    var itemClicks = imageStats[2]; // ditto this.
+    var itemViews = imageStats[1];
+    totalViewsArray[i] = itemViews;
+    var itemClicks = imageStats[2];
+    totalClicksArray[i] = itemClicks;
   }
 };
 
 var handleClick = function(event) {
   var clicked = event.target.src;
-  if(clickCounter < 4) {
+  if(clickCounter < 24) {
     for(var i = 0; i < imagesArray.length; i++) {
       if(clicked.split('img/')[1] === imagesArray[i].imgFilePath) {
         imagesArray[i].clicks++;
@@ -133,17 +136,16 @@ var handleClick = function(event) {
   } else {
     display_images.removeEventListener('click', handleClick);
     resultsButton.style.display = 'inline-block';
-    displayStats();
   }
 };
 
 var handleDisplayResults = function(event) {
+  generateStats();
   makeChart();
   resultsChart.style.display = 'block';
   console.log('display the chart!');
 };
 
-// Chart
 var makeChart = function() {
   var ctx = document.getElementById('chart').getContext('2d');
   var resultsChart = new Chart(ctx, {
@@ -152,13 +154,28 @@ var makeChart = function() {
       labels: namesArray,
       datasets: [
         {
-          label: 'Survey Results - Clicks Per Item',
+          label: 'Total Number of Clicks',
           backgroundColor: 'rgba(40, 182, 195, 0.7)',
-          borderColor: 'rgba(47, 90, 148, 1)',
+          borderWidth: 1,
+          hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
+          hoverBorderColor: 'rgba(253, 188, 58, 1)',
+          data: totalClicksArray,
+        },
+        {
+          label: '% Clicks Per Times Viewed',
+          backgroundColor: 'rgba(57,184, 118, 0.7)',
           borderWidth: 1,
           hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
           hoverBorderColor: 'rgba(253, 188, 58, 1)',
           data: percentsArray,
+        },
+        {
+          label: 'Total Views',
+          backgroundColor: 'rgba(47,90,148, 0.7)',
+          borderWidth: 1,
+          hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
+          hoverBorderColor: 'rgba(253, 188, 58, 1)',
+          data: totalViewsArray,
         }
       ]
     }

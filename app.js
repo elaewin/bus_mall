@@ -20,7 +20,7 @@ var prevChoicesArray = [21, 21, 21];
 // Where images will be added.
 var ulEl = document.getElementById('display_images');
 
-// Functions Needed:
+// Constructor for image objects.
 function productImage(imgName, imgFilePath, numberOfClicks, timesShown) {
   this.imgName = imgName;
   this.imgFilePath = imgFilePath;
@@ -46,21 +46,32 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+// // Attempting to make a function to check for an item in an array.
+// var checkContent = function(item, arrayToCheck, booleanValueIfPresent) {
+//   var result = !booleanValueIfPresent;
+//   for(var i = 0; i < arrayToCheck.length; i++) {
+//     if(item === arrayToCheck[i])
+//       result = booleanValueIfPresent;
+//   }
+//   return result;
+// };
+
 function getImages() {
   ulEl.innerHTML = '';
   var choicesCounter = 0;
+  console.log('previous choices', prevChoicesArray);
   while(choicesCounter < 3) {
     var isRepeatNumber = true;
     while(isRepeatNumber === true) {
       isRepeatNumber = false;
       var newInt = getRandomInt(0, 20);
-      console.log('newInt', newInt);
-      for(var j = 0; j < prevChoicesArray.length; j++) { // Make this a function!
+      // console.log('newInt', newInt);
+      for(var j = 0; j < prevChoicesArray.length; j++) { // Make a function?
         if(newInt === prevChoicesArray[j]) {
           isRepeatNumber = true;
         }
       }
-      for(var k = 0; k < choicesArray.length; k++) { // Make this a function!
+      for(var k = 0; k < choicesArray.length; k++) { // Make a function!
         if(newInt === choicesArray[k]) {
           isRepeatNumber = true;
         }
@@ -72,12 +83,13 @@ function getImages() {
     buildElement('img', '', liEl, 'src', imagesArray[newInt].imgFilePath);
     ulEl.appendChild(liEl);
     choicesCounter++;
-    console.log('counter', choicesCounter);
+    // console.log('counter', choicesCounter);
   }
   for(var i = 0; i < choicesArray.length; i++) {
     prevChoicesArray[i] = choicesArray[i];
   }
-}
+  console.log('current choices', choicesArray);
+};
 
 var checkRefs = function() {
   for(var i = 0; i < imagesArray.length; i++) {
@@ -85,23 +97,27 @@ var checkRefs = function() {
   }
 };
 
-// var displayResults = function() {
-//   for(each item in imagesArray) {
-//     calculate the percentage of time that the item was clicked if shown
-//     write # of clicks to DOM
-//     write percentage of clicks to DOM
-//   }
-// }
+var displayResults = function() {
+  for(var i = 0; i < imagesArray.length; i++) {
+    var image = imagesArray[i];
+    var percent = calClickPercent();
+    console.log('shown to user', image.timesShown);
+    console.log('clicks', image.numberOfClicks);
+    console.log('percentage', percent);
+    // write # of clicks to DOM
+    // write percentage of clicks to DOM
+  }
+};
 
 var calcClickPercent = function() {
   for(var i = 0; i < imagesArray.length; i++) {
-    var currentImage = imagesArray[i],
+    var currentImage = imagesArray[i];
     var views = currentImage.timesShown;
     var clicks = currentImage.numberOfClicks;
     var percentage = clicks / views;
-    return [clicks, percentage]
+    return percentage;
   }
-}
+};
 //
 // // HANDLER FUNCTION: THIS WILL HAVE TO BE AN ANON FUNCTION
 // var handleClick = function() {

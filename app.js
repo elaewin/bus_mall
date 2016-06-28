@@ -104,6 +104,13 @@ var checkRefs = function() {
   }
 };
 
+var calcClickPercent = function(image) {
+  var views = image.timesShown;
+  var clicks = image.numberOfClicks;
+  var percentage = clicks / views;
+  return [percentage, clicks, views];
+};
+
 // var displayResults = function() {
 //   for(var i = 0; i < imagesArray.length; i++) {
 //     var image = imagesArray[i];
@@ -115,21 +122,11 @@ var checkRefs = function() {
 //     // write percentage of clicks to DOM
 //   }
 // };
-//
-// var calcClickPercent = function() {
-//   for(var i = 0; i < imagesArray.length; i++) {
-//     var currentImage = imagesArray[i];
-//     var views = currentImage.timesShown;
-//     var clicks = currentImage.numberOfClicks;
-//     var percentage = clicks / views;
-//     return percentage;
-//   }
-// };
-//
+
 var handleClick = function(event) {
   var clickedImgName = event.target.id;
   console.log('event target', event.target.id);
-  if(clickCounter < 25) {
+  if(clickCounter < 5) {
     for(var i = 0; i < imagesArray.length; i++) {
       if(clickedImgName === imagesArray[i].imgName) {
         imagesArray[i].numberOfClicks++;
@@ -140,8 +137,9 @@ var handleClick = function(event) {
       }
     }
   } else {
-    display_images.removeEventHandler('click', clickCounter);
-  //   displayResults();
+    display_images.removeEventListener('click', handleClick);
+    console.log('no more clicks!')
+    displayResults();
   }
 };
 

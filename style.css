@@ -39,7 +39,7 @@ img {
 }
 
 #results {
-  display: inline-block;
+  display: none;
   border-radius: 8px;
   color: #ffffff;
   font-size: 20px;
@@ -53,4 +53,10 @@ img {
 #results:hover {
   background: #28b6c3;
   text-decoration: none;
+}
+
+canvas {
+  display: none;
+  border: 1px solid #2f5a94;
+  margin-top: 15px;
 }

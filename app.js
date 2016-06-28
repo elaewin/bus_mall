@@ -16,6 +16,8 @@ var totalClicksArray = [];
 var percentsArray = [];
 
 var ulEl = document.getElementById('display_images');
+var resultsButton = document.getElementById('results');
+var resultsChart = document.getElementById('chart');
 
 // Constructor for image objects.
 function productImage(imgFilePath) {
@@ -120,22 +122,53 @@ var displayStats = function() {
 
 var handleClick = function(event) {
   var clicked = event.target.src;
-  if(clickCounter < 25) {
+  if(clickCounter < 4) {
     for(var i = 0; i < imagesArray.length; i++) {
       if(clicked.split('img/')[1] === imagesArray[i].imgFilePath) {
         imagesArray[i].clicks++;
-        clickCounter++;
+        clickCounter += 1;
         getImages();
       }
     }
   } else {
     display_images.removeEventListener('click', handleClick);
+    resultsButton.style.display = 'inline-block';
     displayStats();
   }
 };
 
-// Event Handler
+var handleDisplayResults = function(event) {
+  makeChart();
+  resultsChart.style.display = 'block';
+  console.log('display the chart!');
+};
+
+// Chart
+var makeChart = function() {
+  var ctx = document.getElementById('chart').getContext('2d');
+  var resultsChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: namesArray,
+      datasets: [
+        {
+          label: 'Survey Results - Clicks Per Item',
+          backgroundColor: 'rgba(40, 182, 195, 0.7)',
+          borderColor: 'rgba(47, 90, 148, 1)',
+          borderWidth: 1,
+          hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
+          hoverBorderColor: 'rgba(253, 188, 58, 1)',
+          data: percentsArray,
+        }
+      ]
+    }
+  });
+};
+
+// Event Handlers
 display_images.addEventListener('click', handleClick);
+results.addEventListener('click', handleDisplayResults);
+
 
 // Call functions here:
 buildImageObjects(imageFilePaths);

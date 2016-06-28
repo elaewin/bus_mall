@@ -13,14 +13,41 @@ main {
 h1 {
   color: #2f5a94;
   font-size: 2.5em;
+  font-variant: small-caps;
   font-weight: bold;
   margin: 30px 0;
   text-align: center;
 }
 
+section div {
+  display: block;
+  width: 320px;
+  height: 160px;
+  margin: 0 auto 30px;
+  color: #fff;
+  background-color: #2f5a94;
+  border-radius: 8px;
+}
+
+section div p {
+  font-size: 3em;
+  text-align: center;
+  line-height: normal;
+  text-transform: uppercase;
+  padding-top: 18px;
+}
+
+section div:hover {
+  background-color: #28b6c3;
+}
+
 p {
   padding-bottom: 30px;
   line-height: 24px;
+}
+
+#display_images {
+  display: none;
 }
 
 li {

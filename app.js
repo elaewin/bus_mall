@@ -16,6 +16,7 @@ var totalClicksArray = [];
 var percentsArray = [];
 var totalViewsArray = [];
 
+var startButton = document.getElementById('start_button');
 var ulEl = document.getElementById('display_images');
 var resultsButton = document.getElementById('results');
 var resultsChart = document.getElementById('chart');
@@ -123,6 +124,11 @@ var generateStats = function() {
   }
 };
 
+var handleSurveyStart = function(event) {
+  startButton.style.display = 'none';
+  ulEl.style.display = 'block';
+};
+
 var handleClick = function(event) {
   var clicked = event.target.src;
   if(clickCounter < 24) {
@@ -135,7 +141,7 @@ var handleClick = function(event) {
     }
   } else {
     display_images.removeEventListener('click', handleClick);
-    resultsButton.style.display = 'inline-block';
+    resultsButton.style.display = 'block';
   }
 };
 
@@ -158,7 +164,6 @@ var makeChart = function() {
           backgroundColor: 'rgba(40, 182, 195, 0.7)',
           borderWidth: 1,
           hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
-          hoverBorderColor: 'rgba(253, 188, 58, 1)',
           data: totalClicksArray,
         },
         {
@@ -166,7 +171,6 @@ var makeChart = function() {
           backgroundColor: 'rgba(57,184, 118, 0.7)',
           borderWidth: 1,
           hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
-          hoverBorderColor: 'rgba(253, 188, 58, 1)',
           data: percentsArray,
         },
         {
@@ -174,7 +178,6 @@ var makeChart = function() {
           backgroundColor: 'rgba(47,90,148, 0.7)',
           borderWidth: 1,
           hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
-          hoverBorderColor: 'rgba(253, 188, 58, 1)',
           data: totalViewsArray,
         }
       ]
@@ -183,6 +186,7 @@ var makeChart = function() {
 };
 
 // Event Handlers
+start_button.addEventListener('click', handleSurveyStart);
 display_images.addEventListener('click', handleClick);
 results.addEventListener('click', handleDisplayResults);
 

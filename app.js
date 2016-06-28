@@ -1,13 +1,5 @@
 'use strict';
 
-// 1. Show 3 random images to user
-// 2. User clicks on one image of the three
-// 3. Three new images are displayed, without repeating
-// 4. Repeat 1-3 25 times.
-// 5. After 25 repeats, display results.
-//
-// Global Variables:
-
 // Array of images generated from constructor function
 var imagesArray = [];
 
@@ -128,14 +120,14 @@ var displayResults = function() {
 
 var handleClick = function(event) {
   var clickedImgName = event.target.id;
-  console.log('event target', event.target.id);
+  // console.log('event target', event.target.id);
   if(clickCounter < 5) {
     for(var i = 0; i < imagesArray.length; i++) {
       if(clickedImgName === imagesArray[i].imgName) {
         imagesArray[i].numberOfClicks++;
-        console.log('clicks', imagesArray[i].numberOfClicks);
+        // console.log('clicks', imagesArray[i].numberOfClicks);
         clickCounter++;
-        console.log('counter', clickCounter);
+        // console.log('counter', clickCounter);
         getImages();
       }
     }

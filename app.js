@@ -11,6 +11,9 @@ var choicesArray = [];
 var prevChoicesArray = [21, 21, 21];
 var clickCounter = 0;
 
+var totalClicksArray = [];
+var percentagesArray = [];
+
 var ulEl = document.getElementById('display_images');
 
 // Constructor for image objects.
@@ -88,60 +91,57 @@ function displayImages() {
   }
 }
 
-// var checkRefs = function() {
-//   for(var i = 0; i < imagesArray.length; i++) {
-//     // console.log('image reps', imagesArray[i].views);
-//   }
-// };
-//
-// var calcClickPercent = function(image) {
-//   var views = image.views;
-//   var clicks = image.clicks;
-//   var percentage = clicks / views;
-//   return [percentage, views, clicks];
-// };
-//
-// var displayStats = function() {
-//   for(var i = 0; i < imagesArray.length; i++) {
-//     var imageStats = calcClickPercent(imagesArray[i]);
-//     var percentage = imageStats[0];
-//     console.log('percentage', percentage);
-//     var itemViews = imageStats[1];
-//     console.log('views', itemViews);
-//     var itemClicks = imageStats[2];
-//     console.log('clicks', itemClicks);
-//     // write # of clicks to DOM
-//     // write percentage of clicks to DOM
-//   }
-// };
-//
-// var handleClick = function(event) {
-//   var clicked = event.target.id;
-//   console.log('event target', event.target.id);
-//   if(clickCounter < 5) {
-//     for(var i = 0; i < imagesArray.length; i++) {
-//       if(clicked === imagesArray[i].imgName) {
-//         imagesArray[i].clicks++;
-//         console.log('clicks', imagesArray[i].clicks);
-//         clickCounter++;
-//         console.log('counter', clickCounter);
-//         getImages();
-//       }
-//     }
-//   } else {
-//     display_images.removeEventListener('click', handleClick);
-//     // console.log('no more clicks!');
-//     displayResults();
-//   }
-// };
-//
-// // Event Handler
-// display_images.addEventListener('click', handleClick);
-//
-// // Call functions here:
+var checkRefs = function() {
+  for(var i = 0; i < imagesArray.length; i++) {
+    // console.log('image reps', imagesArray[i].views);
+  }
+};
+
+var calcClickPercent = function(image) {
+  var views = image.views;
+  var clicks = image.clicks;
+  var percentage = clicks / views;
+  return [percentage, views, clicks];
+};
+
+var displayStats = function() {
+  for(var i = 0; i < imagesArray.length; i++) {
+    var imageStats = calcClickPercent(imagesArray[i]);
+    var percentage = imageStats[0].toFixed(2);
+    console.log('percentage', percentage);
+    var itemViews = imageStats[1];
+    console.log('views', itemViews);
+    var itemClicks = imageStats[2];
+    console.log('clicks', itemClicks);
+    // write # of clicks to DOM
+    // write percentage of clicks to DOM
+  }
+};
+
+var handleClick = function(event) {
+  var clicked = event.target.src;
+  if(clickCounter < 25) {
+    for(var i = 0; i < imagesArray.length; i++) {
+      if('img/' + clicked.split('img/')[1] === imagesArray[i].imgFilePath) {
+        imagesArray[i].clicks++;
+        console.log('clicks', imagesArray[i].clicks);
+        clickCounter++;
+        console.log('counter', clickCounter);
+        getImages();
+      }
+    }
+  } else {
+    display_images.removeEventListener('click', handleClick);
+    // console.log('no more clicks!');
+    displayStats();
+  }
+};
+
+// Event Handler
+display_images.addEventListener('click', handleClick);
+
+// Call functions here:
 
 buildImageObjects(imageFilePaths);
 console.dir(imagesArray);
-// displayImages();
-
 getImages();

@@ -1,7 +1,3 @@
-// NOTES FROM LAB ON TUESDAY
-// MAKE ALL IMAGES 300X300 IN PS TONIGHT
-// DON'T TRY TO GENERATE IMAGES ON THE FLY--SET SPECIFIC LOCATIONS AND USE THEM THAT WAY.
-
 'use strict';
 
 var imageFilePaths = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'usb.gif', 'water-can.jpg', 'wine-glass.jpg'];
@@ -57,7 +53,7 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-// // Attempting to make a function to check for an item in an array.
+// Checks for an item in an array.
 var checkContent = function(index, array) {
   var result = false;
   for(var i = 0; i < array.length; i++) {
@@ -95,12 +91,6 @@ function displayImages() {
     ulEl.appendChild(liEl);
   }
 }
-
-var checkRefs = function() {
-  for(var i = 0; i < imagesArray.length; i++) {
-    // console.log('image reps', imagesArray[i].views);
-  }
-};
 
 var calcClickStats = function(image) {
   var views = image.views;
@@ -189,7 +179,6 @@ var makeChart = function() {
 start_button.addEventListener('click', handleSurveyStart);
 display_images.addEventListener('click', handleClick);
 results.addEventListener('click', handleDisplayResults);
-
 
 // Call functions here:
 buildImageObjects(imageFilePaths);

@@ -2,12 +2,12 @@
 
 var imageFilePaths = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'usb.gif', 'water-can.jpg', 'wine-glass.jpg'];
 
+var namesArray = [];
 var imagesArray = [];
 var choicesArray = [];
 var prevChoicesArray = [21, 21, 21];
 var clickCounter = 0;
 
-var namesArray = [];
 var totalClicksArray = [];
 var percentsArray = [];
 var totalViewsArray = [];
@@ -63,7 +63,8 @@ var checkContent = function(index, array) {
   return result;
 };
 
-function getImages() {
+// Generates 3 random images and updates the DOM
+var getImages = function() {
   ulEl.innerHTML = '';
   var choicesCounter = 0;
   while(choicesCounter < 3) {
@@ -81,7 +82,7 @@ function getImages() {
   }
 };
 
-function displayImages() {
+var displayImages = function() {
   ulEl.innerHTML = '';
   for(var i = 0; i < choicesArray.length; i++) {
     var imgNumber = choicesArray[i];
@@ -90,9 +91,9 @@ function displayImages() {
     buildElement('img', '', liEl, 'src', source);
     ulEl.appendChild(liEl);
   }
-}
+};
 
-var calcClickStats = function(image) {
+var calcStats = function(image) {
   var views = image.views;
   var clicks = image.clicks;
   var percentage = clicks / views;
@@ -104,13 +105,13 @@ var calcClickStats = function(image) {
 
 var generateStats = function() {
   for(var i = 0; i < imagesArray.length; i++) {
-    var imageStats = calcClickStats(imagesArray[i]);
-    var percentage = imageStats[0].toFixed(2);
-    percentsArray[i] = percentage; // change this so that it calculates from here...or maybe rework the calcClickStats to calculate AFTER the total clicks and total views? OR make two different results: one for the single user, one for the overall numbers.
+    var imageStats = calcStats(imagesArray[i]);
+    var percentage = (imageStats[0].toFixed(2) * 100);
+    percentsArray[i] = percentage; // change this so that it calculates from here...or maybe rework the calcStats to calculate AFTER the total clicks and total views? OR make two different results: one for the single user, one for the overall numbers.
     var itemViews = imageStats[1];
-    totalViewsArray[i] += itemViews;
+    totalViewsArray[i] = itemViews;
     var itemClicks = imageStats[2];
-    totalClicksArray[i] += itemClicks;
+    totalClicksArray[i] = itemClicks;
   }
 };
 
@@ -138,6 +139,7 @@ var handleClick = function(event) {
 var handleDisplayResults = function(event) {
   generateStats();
   makeChart();
+  ulEl.style.display = 'none';
   resultsChart.style.display = 'block';
   console.log('display the chart!');
 };

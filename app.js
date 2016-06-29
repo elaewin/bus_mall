@@ -107,11 +107,12 @@ var generateStats = function() {
   for(var i = 0; i < imagesArray.length; i++) {
     var imageStats = calcStats(imagesArray[i]);
     var percentage = (imageStats[0].toFixed(2) * 100);
-    percentsArray[i] = percentage; // change this so that it calculates from here...or maybe rework the calcStats to calculate AFTER the total clicks and total views? OR make two different results: one for the single user, one for the overall numbers.
+    percentsArray[i] = percentage;
     var itemViews = imageStats[1];
-    totalViewsArray[i] = itemViews;
+    totalViewsArray[i] += itemViews;
     var itemClicks = imageStats[2];
-    totalClicksArray[i] = itemClicks;
+    totalClicksArray[i] += itemClicks;
+    var overallPercent = totalClicksArray[i] / totalViewsArray[i];
   }
 };
 
@@ -122,7 +123,7 @@ var handleSurveyStart = function(event) {
 
 var handleClick = function(event) {
   var clicked = event.target.src;
-  if(clickCounter < 24) {
+  if(clickCounter < 4) {
     for(var i = 0; i < imagesArray.length; i++) {
       if(clicked.split('img/')[1] === imagesArray[i].imgFilePath) {
         imagesArray[i].clicks++;

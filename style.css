@@ -19,22 +19,20 @@ h1 {
   text-align: center;
 }
 
-section div {
+#start_button {
   display: block;
-  width: 320px;
-  height: 160px;
-  margin: 0 auto 30px;
-  color: #fff;
   background-color: #2f5a94;
+  border: none;
   border-radius: 8px;
-}
-
-section div p {
+  color: #fff;
+  cursor: pointer;
   font-size: 3em;
-  text-align: center;
+  height: 160px;
   line-height: normal;
+  margin: 0 auto 30px;
+  text-align: center;
   text-transform: uppercase;
-  padding-top: 18px;
+  width: 320px;
 }
 
 section div:hover {
@@ -66,15 +64,17 @@ img {
 }
 
 #results {
-  display: none;
-  border-radius: 8px;
-  color: #ffffff;
-  font-size: 20px;
   background: #39b876;
-  padding: 10px 20px 10px 20px;
-  text-decoration: none;
-  text-align: center;
+  border: none;
+  border-radius: 8px;
   clear: both;
+  color: #ffffff;
+  display: none;
+  font-size: 20px;
+  padding: 10px 20px 10px 20px;
+  margin: 0 auto;
+  text-align: center;
+  text-decoration: none;
 }
 
 #results:hover {

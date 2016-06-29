@@ -18,7 +18,7 @@ var resultsButton = document.getElementById('results');
 var resultsChart = document.getElementById('chart');
 
 // Constructor for image objects.
-function productImage(imgFilePath) {
+function ProductImage(imgFilePath) {
   this.imgFilePath = imgFilePath;
   this.clicks = 0;
   this.views = 0;
@@ -26,10 +26,10 @@ function productImage(imgFilePath) {
   imagesArray.push(this);
 }
 
-// Builds array of productImages and creates namesArray
+// Builds array of ProductImages and creates namesArray
 function buildImageObjects(array) {
   for(var i = 0; i < array.length; i++) {
-    imagesArray[i] = (new productImage(array[i]));
+    imagesArray[i] = (new ProductImage(array[i]));
     var itemName = imagesArray[i].imgFilePath.split('.')[0];
     namesArray[i] = itemName;
   }
@@ -70,7 +70,7 @@ function getImages() {
     var newInt = getRandomInt(0, 20);
     while(checkContent(newInt, prevChoicesArray) || checkContent(newInt, choicesArray)) {
       newInt = getRandomInt(0, 20);
-    }
+    } // could rework this to be more efficient?
     choicesArray[choicesCounter] = newInt;
     imagesArray[newInt].views++;
     choicesCounter++;
@@ -106,11 +106,11 @@ var generateStats = function() {
   for(var i = 0; i < imagesArray.length; i++) {
     var imageStats = calcClickStats(imagesArray[i]);
     var percentage = imageStats[0].toFixed(2);
-    percentsArray[i] = percentage;
+    percentsArray[i] = percentage; // change this so that it calculates from here...or maybe rework the calcClickStats to calculate AFTER the total clicks and total views? OR make two different results: one for the single user, one for the overall numbers.
     var itemViews = imageStats[1];
-    totalViewsArray[i] = itemViews;
+    totalViewsArray[i] += itemViews;
     var itemClicks = imageStats[2];
-    totalClicksArray[i] = itemClicks;
+    totalClicksArray[i] += itemClicks;
   }
 };
 

@@ -8,9 +8,15 @@ var choicesArray = [];
 var prevChoicesArray = [21, 21, 21];
 var clickCounter = 0;
 
-var totalClicksArray = [];
+// Variables for showing chart data;
+var clicksArray = [];
+var viewsArray = [];
 var percentsArray = [];
+var totalClicksArray = [];
 var totalViewsArray = [];
+var overallPercentArray = [];
+
+var localStorageNames = ['storedCurrentClicks', 'storedCurrentViews', 'storedCurrentPercent', 'storedTotalClicks', 'storedTotalViews', 'storedOverallPercent', 'storedClickCounter'];
 
 var startButton = document.getElementById('start_button');
 var ulEl = document.getElementById('display_images');
@@ -22,8 +28,6 @@ function ProductImage(imgFilePath) {
   this.imgFilePath = imgFilePath;
   this.clicks = 0;
   this.views = 0;
-
-  imagesArray.push(this);
 }
 
 // Builds array of ProductImages and creates namesArray
@@ -71,7 +75,7 @@ var getImages = function() {
     var newInt = getRandomInt(0, 20);
     while(checkContent(newInt, prevChoicesArray) || checkContent(newInt, choicesArray)) {
       newInt = getRandomInt(0, 20);
-    } // could rework this to be more efficient?
+    }
     choicesArray[choicesCounter] = newInt;
     imagesArray[newInt].views++;
     choicesCounter++;
@@ -97,23 +101,37 @@ var calcStats = function(image) {
   var views = image.views;
   var clicks = image.clicks;
   var percentage = clicks / views;
-  if(typeof(percentage) === NaN) {
+  if(isNaN(percentage)) {
     percentage = 0;
   }
-  return [percentage, views, clicks];
+  return [clicks, views, percentage];
 };
 
 var generateStats = function() {
   for(var i = 0; i < imagesArray.length; i++) {
     var imageStats = calcStats(imagesArray[i]);
-    var percentage = (imageStats[0].toFixed(2) * 100);
-    percentsArray[i] = percentage;
-    var itemViews = imageStats[1];
-    totalViewsArray[i] += itemViews;
-    var itemClicks = imageStats[2];
+    var itemClicks = imageStats[0];
+    clicksArray[i] = itemClicks
+    if(isNaN(totalClicksArray[i])) {
+      totalClicksArray[i] = 0;
+    }
     totalClicksArray[i] += itemClicks;
-    var overallPercent = totalClicksArray[i] / totalViewsArray[i];
+    var itemViews = imageStats[1];
+    viewsArray[i] = itemViews;
+    if(isNaN(totalViewsArray[i])) {
+      totalViewsArray[i] = 0;
+    }
+    totalViewsArray[i] += itemViews;
+    var percentage = (imageStats[2].toFixed(2) * 100);
+    percentsArray[i] = percentage;
+    overallPercentArray[i] = (totalClicksArray[i] / totalViewsArray[i]).toFixed(2) * 100;
   }
+  // localStorage.storedCurrentClicks = JSON.stringify(clicksArray);
+  // localStorage.storedCurrentViews = JSON.stringify(viewsArray);
+  // localStorage.storedCurrentPercent = JSON.stringify(percentsArray);
+  // localStorage.storedTotalClicks = JSON.stringify(totalClicksArray);
+  // localStorage.storedTotalViews = JSON.stringify(totalViewsArray);
+  // localStorage.storedOverallPercent = JSON.stringify(overallPercentArray);
 };
 
 var handleSurveyStart = function(event) {
@@ -123,11 +141,13 @@ var handleSurveyStart = function(event) {
 
 var handleClick = function(event) {
   var clicked = event.target.src;
-  if(clickCounter < 4) {
+  if(clickCounter < 24) {
     for(var i = 0; i < imagesArray.length; i++) {
       if(clicked.split('img/')[1] === imagesArray[i].imgFilePath) {
         imagesArray[i].clicks++;
+        generateStats();
         clickCounter += 1;
+        localStorage.storedClickCounter = JSON.stringify(clickCounter);
         getImages();
       }
     }
@@ -138,16 +158,14 @@ var handleClick = function(event) {
 };
 
 var handleDisplayResults = function(event) {
-  generateStats();
   makeChart();
   ulEl.style.display = 'none';
   resultsChart.style.display = 'block';
-  console.log('display the chart!');
 };
 
 var makeChart = function() {
   var ctx = document.getElementById('chart').getContext('2d');
-  var resultsChart = new Chart(ctx, {
+  var statResultsChart = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: namesArray,
@@ -159,13 +177,13 @@ var makeChart = function() {
           hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
           data: totalClicksArray,
         },
-        {
-          label: '% Clicks Per Times Viewed',
-          backgroundColor: 'rgba(57,184, 118, 0.7)',
-          borderWidth: 1,
-          hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
-          data: percentsArray,
-        },
+        // {
+        //   label: '% Clicks Per Times Viewed',
+        //   backgroundColor: 'rgba(57,184, 118, 0.7)',
+        //   borderWidth: 1,
+        //   hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
+        //   data: overallPercentArray,
+        // },
         {
           label: 'Total Views',
           backgroundColor: 'rgba(47,90,148, 0.7)',
@@ -176,6 +194,7 @@ var makeChart = function() {
       ]
     }
   });
+  console.log(statResultsChart);
 };
 
 // Event Handlers
@@ -183,6 +202,13 @@ start_button.addEventListener('click', handleSurveyStart);
 display_images.addEventListener('click', handleClick);
 results.addEventListener('click', handleDisplayResults);
 
+var checkLocalStorage = function() {
+  if(localStorage.storedClickCounter) {
+    clickCounter = JSON.parse(localStorage.getItem('storedClickCounter'));
+  }
+};
+
 // Call functions here:
+checkLocalStorage();
 buildImageObjects(imageFilePaths);
 getImages();

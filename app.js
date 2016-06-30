@@ -23,13 +23,12 @@ var resultsChart = document.getElementById('chart');
 var imageFilePaths = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'usb.gif', 'water-can.jpg', 'wine-glass.jpg'];
 
 var checkLocalStorage = function() {
-  if(localStorage.storedClickCounter < 24) {
+  if(localStorage.storedClickCounter < 4) {
     clickCounter = JSON.parse(localStorage.storedClickCounter);
   } else {
     clickCounter = 0;
   }
   if(localStorage.storedOngoingArray) {
-    console.log('ongoing array found!');
     ongoingArray = JSON.parse(localStorage.storedOngoingArray);
   }
 };
@@ -95,9 +94,7 @@ var getImages = function() {
     }
     choicesArray[choicesCounter] = newInt;
     imagesArray[newInt].views++;
-    console.log('current views', imagesArray[newInt].views);
     ongoingArray[newInt].views++;
-    console.log('ongoing views', ongoingArray[newInt].views);
     choicesCounter++;
   }
   displayImages();
@@ -117,27 +114,6 @@ var displayImages = function() {
   }
 };
 
-// var calcStats = function(image) {
-//   var views = image.views;
-//   console.log('views', image.views);
-//   var clicks = image.clicks;
-//   console.log('clicks', image.clicks);
-// };
-//
-// var updateCurrent = function() {
-//   for(var i = 0; i < imagesArray.length; i++) {
-//     calcStats(imagesArray[i]);
-//     localStorage.storedImagesArray = JSON.stringify(imagesArray);
-//   }
-// };
-//
-// var updateOngoing = function() {
-//   for(var i = 0; i < ongoingArray.length; i++) {
-//     calcStats(ongoingArray[i]);
-//     localStorage.storedOngoingArray = JSON.stringify(ongoingArray);
-//   }
-// };
-
 var makeIsNaNZero = function(arrayItem) {
   if(isNaN(arrayItem)) {
     arrayItem = 0;
@@ -147,16 +123,16 @@ var makeIsNaNZero = function(arrayItem) {
 var generateStatsArrays = function() {
   for(var i = 0; i < imagesArray.length; i++) {
     makeIsNaNZero(imagesArray[i].clicks);
-    imagesArray[i].clicks = clicksArray[i];
+    clicksArray[i] = imagesArray[i].clicks;
     makeIsNaNZero(imagesArray[i].views);
-    imagesArray[i].views = viewsArray[i];
+    viewsArray[i] = imagesArray[i].views;
     var percentage = (clicksArray[i] / viewsArray[i]).toFixed(2) * 100;
     makeIsNaNZero(percentage);
     percentsArray[i] = percentage;
   }
   for(var j = 0; j < ongoingArray.length; j++) {
-    ongoingArray[j].clicks = totalClicksArray[j];
-    ongoingArray[j].views = totalViewsArray[j];
+    totalClicksArray[j] = ongoingArray[j].clicks;
+    totalViewsArray[j] = ongoingArray[j].views;
     overallPercentArray[j] = (totalClicksArray[j] / totalViewsArray[j]).toFixed(2) * 100;
   }
 };
@@ -168,13 +144,11 @@ var handleSurveyStart = function(event) {
 
 var handleClick = function(event) {
   var clicked = event.target.src;
-  if(clickCounter < 24) {
+  if(clickCounter < 4) {
     for(var i = 0; i < imagesArray.length; i++) {
       if(clicked.split('img/')[1] === imagesArray[i].imgFilePath) {
         imagesArray[i].clicks++;
-        console.log('current clicks', imagesArray[i].clicks);
         ongoingArray[i].clicks++;
-        console.log('ongoing clicks', ongoingArray[i].clicks);
         clickCounter += 1;
         localStorage.storedImagesArray = JSON.stringify(imagesArray);
         localStorage.storedOngoingArray = JSON.stringify(ongoingArray);

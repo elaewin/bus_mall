@@ -1,29 +1,42 @@
 'use strict';
 
-var imageFilePaths = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'usb.gif', 'water-can.jpg', 'wine-glass.jpg'];
-
 var namesArray = [];
 var imagesArray = [];
 var choicesArray = [];
 var prevChoicesArray = [21, 21, 21];
 var clickCounter = 0;
 
-var totalClicksArray = [];
+// Variables for showing chart data;
+var clicksArray = [];
+var viewsArray = [];
 var percentsArray = [];
+var totalClicksArray = [];
 var totalViewsArray = [];
+var overallPercentArray = [];
 
 var startButton = document.getElementById('start_button');
 var ulEl = document.getElementById('display_images');
 var resultsButton = document.getElementById('results');
 var resultsChart = document.getElementById('chart');
 
+var imageFilePaths = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'usb.gif', 'water-can.jpg', 'wine-glass.jpg'];
+
+var checkLocalStorage = function() {
+  if(localStorage.storedClickCounter < 24) {
+    clickCounter = JSON.parse(localStorage.storedClickCounter);
+  } else {
+    clickCounter = 0;
+  }
+  if(localStorage.storedImagesArray) {
+    imagesArray = JSON.parse(localStorage.storedImagesArray);
+  }
+};
+
 // Constructor for image objects.
 function ProductImage(imgFilePath) {
   this.imgFilePath = imgFilePath;
   this.clicks = 0;
   this.views = 0;
-
-  imagesArray.push(this);
 }
 
 // Builds array of ProductImages and creates namesArray
@@ -71,7 +84,7 @@ var getImages = function() {
     var newInt = getRandomInt(0, 20);
     while(checkContent(newInt, prevChoicesArray) || checkContent(newInt, choicesArray)) {
       newInt = getRandomInt(0, 20);
-    } // could rework this to be more efficient?
+    }
     choicesArray[choicesCounter] = newInt;
     imagesArray[newInt].views++;
     choicesCounter++;
@@ -96,22 +109,32 @@ var displayImages = function() {
 var calcStats = function(image) {
   var views = image.views;
   var clicks = image.clicks;
+  localStorage.storedImagesArray = JSON.stringify(imagesArray);
   var percentage = clicks / views;
-  if(typeof(percentage) === NaN) {
+  if(isNaN(percentage)) {
     percentage = 0;
   }
-  return [percentage, views, clicks];
+  return [clicks, views, percentage];
 };
 
 var generateStats = function() {
   for(var i = 0; i < imagesArray.length; i++) {
     var imageStats = calcStats(imagesArray[i]);
-    var percentage = (imageStats[0].toFixed(2) * 100);
-    percentsArray[i] = percentage; // change this so that it calculates from here...or maybe rework the calcStats to calculate AFTER the total clicks and total views? OR make two different results: one for the single user, one for the overall numbers.
+    var itemClicks = imageStats[0];
+    clicksArray[i] = itemClicks;
+    if(isNaN(totalClicksArray[i])) {
+      totalClicksArray[i] = 0;
+    }
+    totalClicksArray[i] += itemClicks;
     var itemViews = imageStats[1];
-    totalViewsArray[i] = itemViews;
-    var itemClicks = imageStats[2];
-    totalClicksArray[i] = itemClicks;
+    viewsArray[i] = itemViews;
+    if(isNaN(totalViewsArray[i])) {
+      totalViewsArray[i] = 0;
+    }
+    totalViewsArray[i] += itemViews;
+    var percentage = (imageStats[2].toFixed(2) * 100);
+    percentsArray[i] = percentage;
+    overallPercentArray[i] = (totalClicksArray[i] / totalViewsArray[i]).toFixed(2) * 100;
   }
 };
 
@@ -126,7 +149,9 @@ var handleClick = function(event) {
     for(var i = 0; i < imagesArray.length; i++) {
       if(clicked.split('img/')[1] === imagesArray[i].imgFilePath) {
         imagesArray[i].clicks++;
+        generateStats();
         clickCounter += 1;
+        localStorage.storedClickCounter = JSON.stringify(clickCounter);
         getImages();
       }
     }
@@ -137,16 +162,14 @@ var handleClick = function(event) {
 };
 
 var handleDisplayResults = function(event) {
-  generateStats();
   makeChart();
   ulEl.style.display = 'none';
   resultsChart.style.display = 'block';
-  console.log('display the chart!');
 };
 
 var makeChart = function() {
   var ctx = document.getElementById('chart').getContext('2d');
-  var resultsChart = new Chart(ctx, {
+  var statResultsChart = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: namesArray,
@@ -158,13 +181,13 @@ var makeChart = function() {
           hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
           data: totalClicksArray,
         },
-        {
-          label: '% Clicks Per Times Viewed',
-          backgroundColor: 'rgba(57,184, 118, 0.7)',
-          borderWidth: 1,
-          hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
-          data: percentsArray,
-        },
+        // {
+        //   label: '% Clicks Per Times Viewed',
+        //   backgroundColor: 'rgba(57,184, 118, 0.7)',
+        //   borderWidth: 1,
+        //   hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
+        //   data: overallPercentArray,
+        // },
         {
           label: 'Total Views',
           backgroundColor: 'rgba(47,90,148, 0.7)',
@@ -175,6 +198,7 @@ var makeChart = function() {
       ]
     }
   });
+  console.log(statResultsChart);
 };
 
 // Event Handlers
@@ -183,5 +207,6 @@ display_images.addEventListener('click', handleClick);
 results.addEventListener('click', handleDisplayResults);
 
 // Call functions here:
+checkLocalStorage();
 buildImageObjects(imageFilePaths);
 getImages();

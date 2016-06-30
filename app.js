@@ -1,7 +1,8 @@
 'use strict';
 
-var namesArray = [];
 var imagesArray = [];
+var ongoingArray = [];
+var namesArray = [];
 var choicesArray = [];
 var prevChoicesArray = [21, 21, 21];
 var clickCounter = 0;
@@ -16,19 +17,25 @@ var overallPercentArray = [];
 
 var startButton = document.getElementById('start_button');
 var ulEl = document.getElementById('display_images');
-var resultsButton = document.getElementById('results');
-var resultsChart = document.getElementById('chart');
+var instructions = document.getElementById('instructions');
+var resultsButton = document.getElementById('results_button');
+var resultsChart = document.getElementById('chart_container');
+var marketingButton = document.getElementById('marketing_button');
+var radarChart = document.getElementById('radar_chart');
 
 var imageFilePaths = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'usb.gif', 'water-can.jpg', 'wine-glass.jpg'];
 
+Chart.defaults.global.defaultFontFamily = 'Roboto, sans-serif';
+Chart.defaults.global.title.display = true;
+
 var checkLocalStorage = function() {
-  if(localStorage.storedClickCounter < 24) {
+  if(localStorage.storedClickCounter < 4) {
     clickCounter = JSON.parse(localStorage.storedClickCounter);
   } else {
     clickCounter = 0;
   }
-  if(localStorage.storedImagesArray) {
-    imagesArray = JSON.parse(localStorage.storedImagesArray);
+  if(localStorage.storedOngoingArray) {
+    ongoingArray = JSON.parse(localStorage.storedOngoingArray);
   }
 };
 
@@ -39,12 +46,18 @@ function ProductImage(imgFilePath) {
   this.views = 0;
 }
 
-// Builds array of ProductImages and creates namesArray
+// Builds arrays for current and ongoing data collection. Creates namesArray.
 function buildImageObjects(array) {
   for(var i = 0; i < array.length; i++) {
     imagesArray[i] = (new ProductImage(array[i]));
     var itemName = imagesArray[i].imgFilePath.split('.')[0];
     namesArray[i] = itemName;
+  }
+  if(!localStorage.storedOngoingArray) {
+    for(var i = 0; i < array.length; i++) {
+      ongoingArray[i] = (new ProductImage(array[i]));
+      var itemName = ongoingArray[i].imgFilePath.split('.')[0];
+    }
   }
 }
 
@@ -87,6 +100,7 @@ var getImages = function() {
     }
     choicesArray[choicesCounter] = newInt;
     imagesArray[newInt].views++;
+    ongoingArray[newInt].views++;
     choicesCounter++;
   }
   displayImages();
@@ -106,35 +120,26 @@ var displayImages = function() {
   }
 };
 
-var calcStats = function(image) {
-  var views = image.views;
-  var clicks = image.clicks;
-  localStorage.storedImagesArray = JSON.stringify(imagesArray);
-  var percentage = clicks / views;
-  if(isNaN(percentage)) {
-    percentage = 0;
+var makeIsNaNZero = function(arrayItem) {
+  if(isNaN(arrayItem)) {
+    arrayItem = 0;
   }
-  return [clicks, views, percentage];
 };
 
-var generateStats = function() {
+var generateStatsArrays = function() {
   for(var i = 0; i < imagesArray.length; i++) {
-    var imageStats = calcStats(imagesArray[i]);
-    var itemClicks = imageStats[0];
-    clicksArray[i] = itemClicks;
-    if(isNaN(totalClicksArray[i])) {
-      totalClicksArray[i] = 0;
-    }
-    totalClicksArray[i] += itemClicks;
-    var itemViews = imageStats[1];
-    viewsArray[i] = itemViews;
-    if(isNaN(totalViewsArray[i])) {
-      totalViewsArray[i] = 0;
-    }
-    totalViewsArray[i] += itemViews;
-    var percentage = (imageStats[2].toFixed(2) * 100);
+    makeIsNaNZero(imagesArray[i].clicks);
+    clicksArray[i] = imagesArray[i].clicks;
+    makeIsNaNZero(imagesArray[i].views);
+    viewsArray[i] = imagesArray[i].views;
+    var percentage = (clicksArray[i] / viewsArray[i]).toFixed(2) * 100;
+    makeIsNaNZero(percentage);
     percentsArray[i] = percentage;
-    overallPercentArray[i] = (totalClicksArray[i] / totalViewsArray[i]).toFixed(2) * 100;
+  }
+  for(var j = 0; j < ongoingArray.length; j++) {
+    totalClicksArray[j] = ongoingArray[j].clicks;
+    totalViewsArray[j] = ongoingArray[j].views;
+    overallPercentArray[j] = (totalClicksArray[j] / totalViewsArray[j]).toFixed(2) * 100;
   }
 };
 
@@ -145,66 +150,219 @@ var handleSurveyStart = function(event) {
 
 var handleClick = function(event) {
   var clicked = event.target.src;
-  if(clickCounter < 24) {
+  if(clickCounter < 4) {
     for(var i = 0; i < imagesArray.length; i++) {
       if(clicked.split('img/')[1] === imagesArray[i].imgFilePath) {
         imagesArray[i].clicks++;
-        generateStats();
+        ongoingArray[i].clicks++;
         clickCounter += 1;
+        localStorage.storedImagesArray = JSON.stringify(imagesArray);
+        localStorage.storedOngoingArray = JSON.stringify(ongoingArray);
         localStorage.storedClickCounter = JSON.stringify(clickCounter);
         getImages();
       }
     }
   } else {
+    generateStatsArrays();
     display_images.removeEventListener('click', handleClick);
     resultsButton.style.display = 'block';
   }
 };
 
 var handleDisplayResults = function(event) {
-  makeChart();
+  makeCurrentClicksChart();
+  makeCurrentPercentChart();
+  makeOngoingClicksChart();
+  makeOngoingPercentChart();
   ulEl.style.display = 'none';
+  instructions.style.display = 'none';
+  resultsButton.style.display = 'none';
   resultsChart.style.display = 'block';
+  // marketingButton.style.display = 'block';
 };
 
-var makeChart = function() {
-  var ctx = document.getElementById('chart').getContext('2d');
+var handleMarketingResults = function(event) {
+  makeRadarChart();
+  resultsChart.style.display = 'none';
+  radarChart.style.display = 'block';
+  marketingButton.style.display = 'none';
+  resultsButton.style.display = 'block';
+};
+
+var makeCurrentClicksChart = function() {
+  var ctx = document.getElementById('current_click_chart').getContext('2d');
   var statResultsChart = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: namesArray,
       datasets: [
         {
-          label: 'Total Number of Clicks',
+          label: 'Total Clicks',
           backgroundColor: 'rgba(40, 182, 195, 0.7)',
           borderWidth: 1,
-          hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
+          hoverBackgroundColor: 'rgba(253, 188, 58, 0.4)',
+          data: clicksArray,
+        },
+        {
+          label: 'Total Item Views',
+          backgroundColor: 'rgba(47,90,148, 0.7)',
+          borderWidth: 1,
+          hoverBackgroundColor: 'rgba(224, 89, 41, 0.4)',
+          data: viewsArray,
+        }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Your Survey Results - Total Times Viewed and Number of Times Clicked',
+        fontFamily: 'Roboto',
+        fontColor: '#2f5a94'
+      }
+    }
+  });
+};
+
+var makeCurrentPercentChart = function() {
+  var ctx = document.getElementById('current_percent_chart').getContext('2d');
+  var statResultsChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: namesArray,
+      datasets: [
+        {
+          label: 'Percentage of Clicks',
+          backgroundColor: 'rgba(57,184, 118, 0.7)',
+          borderWidth: 1,
+          hoverBackgroundColor: 'rgba(253, 188, 58, 0.4)',
+          data: percentsArray,
+        }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Your Survey Results - Percentage of Times an Item was Clicked',
+        fontFamily: 'Roboto',
+        fontColor: '#2f5a94'
+      },
+      tooltips: {
+        mode: 'label',
+        callbacks: {
+          label: function(tooltipItems, data) {
+            return tooltipItems.yLabel + '%';
+          }
+        }
+      }
+    }
+  });
+};
+
+var makeOngoingClicksChart = function() {
+  var ctx = document.getElementById('ongoing_click_chart').getContext('2d');
+  var statResultsChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: namesArray,
+      datasets: [
+        {
+          label: 'Total Clicks',
+          backgroundColor: 'rgba(26, 119, 127, 0.7)',
+          borderWidth: 1,
+          hoverBackgroundColor: 'rgba(253, 188, 58, 0.4)',
           data: totalClicksArray,
         },
         {
-          label: '% Clicks Per Times Viewed',
-          backgroundColor: 'rgba(57,184, 118, 0.7)',
+          label: 'Total Item Views',
+          backgroundColor: 'rgba(37, 71, 116, 0.7)',
           borderWidth: 1,
-          hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
-          data: overallPercentArray,
-        },
-        {
-          label: 'Total Views',
-          backgroundColor: 'rgba(47,90,148, 0.7)',
-          borderWidth: 1,
-          hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
+          hoverBackgroundColor: 'rgba(179, 66, 25, 0.4)',
           data: totalViewsArray,
         }
       ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Overall Survey Results - Total Times Viewed and Number of Times Clicked',
+        fontFamily: 'Roboto',
+        fontColor: '#2f5a94'
+      }
     }
   });
-  console.log(statResultsChart);
+};
+
+var makeOngoingPercentChart = function() {
+  var ctx = document.getElementById('ongoing_percent_chart').getContext('2d');
+  var statResultsChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: namesArray,
+      datasets: [
+        {
+          label: 'Percentage of Clicks',
+          backgroundColor: 'rgba(36, 117, 75, 0.7)',
+          borderWidth: 1,
+          hoverBackgroundColor: 'rgba(253, 188, 58, 0.4)',
+          data: overallPercentArray,
+        }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Overall Survey Results - Percentage of Times an Item was Clicked',
+        fontFamily: 'Roboto',
+        fontColor: '#2f5a94'
+      },
+      tooltips: {
+        mode: 'label',
+        callbacks: {
+          label: function(tooltipItems, data) {
+            return tooltipItems.yLabel + '%';
+          }
+        }
+      }
+    }
+  });
+};
+
+var makeRadarChart = function () {
+  var ctx = document.getElementById('radar_chart').getContext('2d');
+  var marketingRadarChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: namesArray,
+      datasets: [
+        {
+          label: 'Total Clicks',
+          backgroundColor: 'rgba(26, 119, 127, 0.2)',
+          pointBackgroundColor: 'rgba(26, 119, 127, 1)',
+          pointBorderColor: 'rgba(149, 226, 233, 0.8)',
+          pointHoverBackgroundColor: 'rgba(149, 226, 233, 0.8)',
+          pointHoverBorderColor: 'rgba(26, 119, 127, 1)',
+          data: totalClicksArray
+        },
+        {
+          label: 'Total Views',
+          backgroundColor: 'rgba(37, 71, 116, 0.2)',
+          pointBackgroundColor: 'rgba(37, 71, 116, 1)',
+          pointBorderColor: 'rgba(158, 187, 224, 0.8)',
+          pointHoverBackgroundColor: 'rgba(158, 187, 224, 0.8)',
+          pointHoverBorderColor: 'rgba(37, 71, 116, 1)',
+          data: totalViewsArray
+        }
+      ]
+    },
+    options: options
+  });
 };
 
 // Event Handlers
 start_button.addEventListener('click', handleSurveyStart);
 display_images.addEventListener('click', handleClick);
-results.addEventListener('click', handleDisplayResults);
+results_button.addEventListener('click', handleDisplayResults);
+// marketing_button.addEventListener('click', handleMarketingResults);
 
 // Call functions here:
 checkLocalStorage();

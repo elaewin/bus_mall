@@ -9,23 +9,24 @@
   </head>
   <body>
     <main>
-      <div id="container">
-        <h1>BusMall Product Survey</h1>
-        <section id="instructions">
-          <p>
-            Thank you for participating in the BusMall Marketing Survey! We here at BusMall appreciate you taking the time to help us make BusMall the best public transit shopping experience you'll ever find.
-          </p>
-          <p>
-            You will be shown three images of potential BusMall products. Please click on the product that you would be most interesting in seeing in our upcoming BusMall catalog.  After you make 25 selections, you will have the option to view the results of your survey.
-          </p>
-          <button id="start_button">Start the Survey!</button>
-        </section>
-        <ul id="display_images"></ul>
-        <div id="button_container">
-          <button id="results_button">View Results</button>
-        </div>
-        <canvas id="chart" width="960px" height="200px"></canvas>
+      <h1>BusMall Product Survey</h1>
+      <section>
+        <p>
+          Thank you for participating in the BusMall Marketing Survey! We here at BusMall appreciate you taking the time to help us make BusMall the best public transit shopping experience you'll ever find.
+        </p>
+        <p id="instructions">
+          You will be shown three images of potential BusMall products. Please click on the product that you would be most interesting in seeing in our upcoming BusMall catalog.  After you make 25 selections, you will have the option to view the results of your survey.
+        </p>
+        <button id="start_button">Start the Survey!</button>
+      </section>
+      <ul id="display_images"></ul>
+      <div id="chart_container">
+        <canvas id="current_click_chart" width="960px" height="250px"></canvas>
+        <canvas id="current_percent_chart" width="960px" height="250px"></canvas>
+        <canvas id="ongoing_click_chart" width="960px" height="250px"></canvas>
+        <canvas id="ongoing_percent_chart" width="960px" height="250px"></canvas>
       </div>
+      <button id="results_button">View Results</button>
     </main>
     <script src="app.js"></script>
   </body>

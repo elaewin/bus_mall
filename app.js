@@ -17,10 +17,15 @@ var overallPercentArray = [];
 
 var startButton = document.getElementById('start_button');
 var ulEl = document.getElementById('display_images');
+var instructions = document.getElementById('instructions');
 var resultsButton = document.getElementById('results_button');
-var resultsChart = document.getElementById('chart');
+var resultsChart = document.getElementById('chart_container');
 
 var imageFilePaths = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'usb.gif', 'water-can.jpg', 'wine-glass.jpg'];
+
+Chart.defaults.global.defaultFontFamily = 'Roboto, sans-serif';
+Chart.defaults.global.title.display = true;
+Chart.defaults.global.legend.display = true;
 
 var checkLocalStorage = function() {
   if(localStorage.storedClickCounter < 4) {
@@ -164,40 +169,149 @@ var handleClick = function(event) {
 };
 
 var handleDisplayResults = function(event) {
-  makeChart();
+  makeCurrentClicksChart();
+  makeCurrentPercentChart();
+  makeOngoingClicksChart();
+  makeOngoingPercentChart();
   ulEl.style.display = 'none';
+  instructions.style.display = 'none';
   resultsChart.style.display = 'block';
 };
 
-var makeChart = function() {
-  var ctx = document.getElementById('chart').getContext('2d');
+var makeCurrentClicksChart = function() {
+  var ctx = document.getElementById('current_click_chart').getContext('2d');
   var statResultsChart = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: namesArray,
       datasets: [
         {
-          label: 'Total Number of Clicks',
+          label: 'Total Clicks',
           backgroundColor: 'rgba(40, 182, 195, 0.7)',
           borderWidth: 1,
-          hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
+          hoverBackgroundColor: 'rgba(253, 188, 58, 0.4)',
           data: clicksArray,
         },
         {
-          label: '% Clicks Per Times Viewed',
-          backgroundColor: 'rgba(57,184, 118, 0.7)',
-          borderWidth: 1,
-          hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
-          data: percentsArray,
-        },
-        {
-          label: 'Total Views',
+          label: 'Total Item Views',
           backgroundColor: 'rgba(47,90,148, 0.7)',
           borderWidth: 1,
-          hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
+          hoverBackgroundColor: 'rgba(224, 89, 41, 0.4)',
           data: viewsArray,
         }
       ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Your Survey Results - Total Times Viewed and Number of Times Clicked',
+        fontFamily: 'Roboto',
+        fontColor: '#2f5a94'
+      }
+    }
+  });
+};
+
+var makeCurrentPercentChart = function() {
+  var ctx = document.getElementById('current_percent_chart').getContext('2d');
+  var statResultsChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: namesArray,
+      datasets: [
+        {
+          label: '',
+          backgroundColor: 'rgba(57,184, 118, 0.7)',
+          borderWidth: 1,
+          hoverBackgroundColor: 'rgba(253, 188, 58, 0.4)',
+          data: percentsArray,
+        }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Your Survey Results - Percentage of Times an Item was Clicked',
+        fontFamily: 'Roboto',
+        fontColor: '#2f5a94'
+      },
+      tooltips: {
+        mode: 'label',
+        callbacks: {
+          label: function(tooltipItems, data) {
+            return tooltipItems.yLabel + '%';
+          }
+        }
+      }
+    }
+  });
+};
+
+var makeOngoingClicksChart = function() {
+  var ctx = document.getElementById('ongoing_click_chart').getContext('2d');
+  var statResultsChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: namesArray,
+      datasets: [
+        {
+          label: 'Total Clicks',
+          backgroundColor: 'rgba(26, 119, 127, 0.7)',
+          borderWidth: 1,
+          hoverBackgroundColor: 'rgba(253, 188, 58, 0.4)',
+          data: totalClicksArray,
+        },
+        {
+          label: 'Total Item Views',
+          backgroundColor: 'rgba(37, 71, 116, 0.7)',
+          borderWidth: 1,
+          hoverBackgroundColor: 'rgba(179, 66, 25, 0.4)',
+          data: totalViewsArray,
+        }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Overall Survey Results - Total Times Viewed and Number of Times Clicked',
+        fontFamily: 'Roboto',
+        fontColor: '#2f5a94'
+      }
+    }
+  });
+};
+
+var makeOngoingPercentChart = function() {
+  var ctx = document.getElementById('ongoing_percent_chart').getContext('2d');
+  var statResultsChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: namesArray,
+      datasets: [
+        {
+          label: '',
+          backgroundColor: 'rgba(36, 117, 75, 0.7)',
+          borderWidth: 1,
+          hoverBackgroundColor: 'rgba(253, 188, 58, 0.4)',
+          data: overallPercentArray,
+        }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Overall Survey Results - Percentage of Times an Item was Clicked',
+        fontFamily: 'Roboto',
+        fontColor: '#2f5a94'
+      },
+      tooltips: {
+        mode: 'label',
+        callbacks: {
+          label: function(tooltipItems, data) {
+            return tooltipItems.yLabel + '%';
+          }
+        }
+      }
     }
   });
 };

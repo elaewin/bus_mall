@@ -181,13 +181,13 @@ var makeChart = function() {
           hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
           data: totalClicksArray,
         },
-        // {
-        //   label: '% Clicks Per Times Viewed',
-        //   backgroundColor: 'rgba(57,184, 118, 0.7)',
-        //   borderWidth: 1,
-        //   hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
-        //   data: overallPercentArray,
-        // },
+        {
+          label: '% Clicks Per Times Viewed',
+          backgroundColor: 'rgba(57,184, 118, 0.7)',
+          borderWidth: 1,
+          hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
+          data: overallPercentArray,
+        },
         {
           label: 'Total Views',
           backgroundColor: 'rgba(47,90,148, 0.7)',

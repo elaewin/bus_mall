@@ -28,8 +28,9 @@ var checkLocalStorage = function() {
   } else {
     clickCounter = 0;
   }
-  if(localStorage.storedImagesArray) {
-    imagesArray = JSON.parse(localStorage.storedImagesArray);
+  if(localStorage.storedOngoingArray) {
+    console.log('ongoing array found!');
+    ongoingArray = JSON.parse(localStorage.storedOngoingArray);
   }
 };
 
@@ -94,6 +95,7 @@ var getImages = function() {
     }
     choicesArray[choicesCounter] = newInt;
     imagesArray[newInt].views++;
+    ongoingArray[newInt].views++;
     choicesCounter++;
   }
   displayImages();
@@ -116,37 +118,42 @@ var displayImages = function() {
 var calcStats = function(image) {
   var views = image.views;
   var clicks = image.clicks;
-  localStorage.storedImagesArray = JSON.stringify(imagesArray);
-  localStorage.storedOngoingArray = JSON.stringify(ongoingArray);
-  var percentage = clicks / views;
-  if(isNaN(percentage)) {
-    percentage = 0;
-  }
-  return [clicks, views, percentage];
 };
 
-// var updateCurrent = function () {
-//
-// }
-
-var generateStats = function() {
+var updateCurrent = function() {
   for(var i = 0; i < imagesArray.length; i++) {
-    var imageStats = calcStats(imagesArray[i]);
-    var itemClicks = imageStats[0];
-    clicksArray[i] = itemClicks;
-    if(isNaN(totalClicksArray[i])) {
-      totalClicksArray[i] = 0;
-    }
-    totalClicksArray[i] += itemClicks;
-    var itemViews = imageStats[1];
-    viewsArray[i] = itemViews;
-    if(isNaN(totalViewsArray[i])) {
-      totalViewsArray[i] = 0;
-    }
-    totalViewsArray[i] += itemViews;
-    var percentage = (imageStats[2].toFixed(2) * 100);
+    calcStats(imagesArray[i]);
+    localStorage.storedImagesArray = JSON.stringify(imagesArray);
+  }
+};
+
+var updateOngoing = function() {
+  for(var i = 0; i < ongoingArray.length; i++) {
+    calcStats(ongoingArray[i]);
+    localStorage.storedOngoingArray = JSON.stringify(ongoingArray);
+  }
+};
+
+var makeIsNaNZero = function(arrayItem) {
+  if(isNaN(arrayItem)) {
+    arrayItem = 0;
+  }
+};
+
+var generateStatsArrays = function() {
+  for(var i = 0; i < imagesArray.length; i++) {
+    makeIsNaNZero(imagesArray[i].clicks);
+    imagesArray[i].clicks = clicksArray[i];
+    makeIsNaNZero(imagesArray[i].views);
+    imagesArray[i].views = viewsArray[i];
+    var percentage = (clicksArray[i] / viewsArray[i]).toFixed(2) * 100;
+    makeIsNaNZero(percentage);
     percentsArray[i] = percentage;
-    overallPercentArray[i] = (totalClicksArray[i] / totalViewsArray[i]).toFixed(2) * 100;
+  }
+  for(var j = 0; j < ongoingArray.length; j++) {
+    ongoingArray[j].clicks = totalClicksArray[j];
+    ongoingArray[j].views = totalViewsArray[j];
+    overallPercentArray[j] = (totalClicksArray[j] / totalViewsArray[j]).toFixed(2) * 100;
   }
 };
 
@@ -161,13 +168,16 @@ var handleClick = function(event) {
     for(var i = 0; i < imagesArray.length; i++) {
       if(clicked.split('img/')[1] === imagesArray[i].imgFilePath) {
         imagesArray[i].clicks++;
-        generateStats();
+        ongoingArray[i].clicks++;
+        updateCurrent();
+        updateOngoing();
         clickCounter += 1;
         localStorage.storedClickCounter = JSON.stringify(clickCounter);
         getImages();
       }
     }
   } else {
+    generateStatsArrays();
     display_images.removeEventListener('click', handleClick);
     resultsButton.style.display = 'block';
   }
@@ -210,7 +220,6 @@ var makeChart = function() {
       ]
     }
   });
-  console.log(statResultsChart);
 };
 
 // Event Handlers

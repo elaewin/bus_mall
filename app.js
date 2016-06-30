@@ -14,16 +14,23 @@ var totalClicksArray = [];
 var totalViewsArray = [];
 var overallPercentArray = [];
 
-// Variables for local storage items
-// var lsImagesArray = localStorage.storedImagesArray;
-// var lsClickCounter = localStorage.ClickCounter;
-
 var startButton = document.getElementById('start_button');
 var ulEl = document.getElementById('display_images');
 var resultsButton = document.getElementById('results');
 var resultsChart = document.getElementById('chart');
 
 var imageFilePaths = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'usb.gif', 'water-can.jpg', 'wine-glass.jpg'];
+
+var checkLocalStorage = function() {
+  if(localStorage.storedClickCounter < 24) {
+    clickCounter = JSON.parse(localStorage.storedClickCounter);
+  } else {
+    clickCounter = 0;
+  }
+  if(localStorage.storedImagesArray) {
+    imagesArray = JSON.parse(localStorage.storedImagesArray);
+  }
+};
 
 // Constructor for image objects.
 function ProductImage(imgFilePath) {
@@ -129,12 +136,6 @@ var generateStats = function() {
     percentsArray[i] = percentage;
     overallPercentArray[i] = (totalClicksArray[i] / totalViewsArray[i]).toFixed(2) * 100;
   }
-  var lsCurrentClicks = JSON.stringify(clicksArray);
-  var lsCurrentViews = JSON.stringify(viewsArray);
-  var lsCurrentPercent = JSON.stringify(percentsArray);
-  var lsTotalClicks = JSON.stringify(totalClicksArray);
-  var lsTotalViews = JSON.stringify(totalViewsArray);
-  var lsOverallPercent = JSON.stringify(overallPercentArray);
 };
 
 var handleSurveyStart = function(event) {
@@ -204,15 +205,6 @@ var makeChart = function() {
 start_button.addEventListener('click', handleSurveyStart);
 display_images.addEventListener('click', handleClick);
 results.addEventListener('click', handleDisplayResults);
-
-var checkLocalStorage = function() {
-  if(localStorage.storedClickCounter) {
-    clickCounter = JSON.parse('storedClickCounter');
-  }
-  if(localStorage.storedImagesArray) {
-    imagesArray = JSON.parse('storedImagesArray');
-  }
-};
 
 // Call functions here:
 checkLocalStorage();

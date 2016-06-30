@@ -29,7 +29,7 @@ Chart.defaults.global.defaultFontFamily = 'Roboto, sans-serif';
 Chart.defaults.global.title.display = true;
 
 var checkLocalStorage = function() {
-  if(localStorage.storedClickCounter < 4) {
+  if(localStorage.storedClickCounter < 24) {
     clickCounter = JSON.parse(localStorage.storedClickCounter);
   } else {
     clickCounter = 0;
@@ -150,7 +150,7 @@ var handleSurveyStart = function(event) {
 
 var handleClick = function(event) {
   var clicked = event.target.src;
-  if(clickCounter < 4) {
+  if(clickCounter < 24) {
     for(var i = 0; i < imagesArray.length; i++) {
       if(clicked.split('img/')[1] === imagesArray[i].imgFilePath) {
         imagesArray[i].clicks++;

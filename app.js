@@ -95,7 +95,9 @@ var getImages = function() {
     }
     choicesArray[choicesCounter] = newInt;
     imagesArray[newInt].views++;
+    console.log('current views', imagesArray[newInt].views);
     ongoingArray[newInt].views++;
+    console.log('ongoing views', ongoingArray[newInt].views);
     choicesCounter++;
   }
   displayImages();
@@ -115,24 +117,26 @@ var displayImages = function() {
   }
 };
 
-var calcStats = function(image) {
-  var views = image.views;
-  var clicks = image.clicks;
-};
-
-var updateCurrent = function() {
-  for(var i = 0; i < imagesArray.length; i++) {
-    calcStats(imagesArray[i]);
-    localStorage.storedImagesArray = JSON.stringify(imagesArray);
-  }
-};
-
-var updateOngoing = function() {
-  for(var i = 0; i < ongoingArray.length; i++) {
-    calcStats(ongoingArray[i]);
-    localStorage.storedOngoingArray = JSON.stringify(ongoingArray);
-  }
-};
+// var calcStats = function(image) {
+//   var views = image.views;
+//   console.log('views', image.views);
+//   var clicks = image.clicks;
+//   console.log('clicks', image.clicks);
+// };
+//
+// var updateCurrent = function() {
+//   for(var i = 0; i < imagesArray.length; i++) {
+//     calcStats(imagesArray[i]);
+//     localStorage.storedImagesArray = JSON.stringify(imagesArray);
+//   }
+// };
+//
+// var updateOngoing = function() {
+//   for(var i = 0; i < ongoingArray.length; i++) {
+//     calcStats(ongoingArray[i]);
+//     localStorage.storedOngoingArray = JSON.stringify(ongoingArray);
+//   }
+// };
 
 var makeIsNaNZero = function(arrayItem) {
   if(isNaN(arrayItem)) {
@@ -168,10 +172,12 @@ var handleClick = function(event) {
     for(var i = 0; i < imagesArray.length; i++) {
       if(clicked.split('img/')[1] === imagesArray[i].imgFilePath) {
         imagesArray[i].clicks++;
+        console.log('current clicks', imagesArray[i].clicks);
         ongoingArray[i].clicks++;
-        updateCurrent();
-        updateOngoing();
+        console.log('ongoing clicks', ongoingArray[i].clicks);
         clickCounter += 1;
+        localStorage.storedImagesArray = JSON.stringify(imagesArray);
+        localStorage.storedOngoingArray = JSON.stringify(ongoingArray);
         localStorage.storedClickCounter = JSON.stringify(clickCounter);
         getImages();
       }
@@ -201,21 +207,21 @@ var makeChart = function() {
           backgroundColor: 'rgba(40, 182, 195, 0.7)',
           borderWidth: 1,
           hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
-          data: totalClicksArray,
+          data: clicksArray,
         },
         {
           label: '% Clicks Per Times Viewed',
           backgroundColor: 'rgba(57,184, 118, 0.7)',
           borderWidth: 1,
           hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
-          data: overallPercentArray,
+          data: percentsArray,
         },
         {
           label: 'Total Views',
           backgroundColor: 'rgba(47,90,148, 0.7)',
           borderWidth: 1,
           hoverBackgroundColor: 'rgba(253, 188, 58, 1)',
-          data: totalViewsArray,
+          data: viewsArray,
         }
       ]
     }

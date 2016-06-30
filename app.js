@@ -109,6 +109,7 @@ var getImages = function() {
   }
 };
 
+// Adds image to the DOM
 var displayImages = function() {
   ulEl.innerHTML = '';
   for(var i = 0; i < choicesArray.length; i++) {

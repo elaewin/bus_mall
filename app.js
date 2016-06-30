@@ -1,7 +1,8 @@
 'use strict';
 
-var namesArray = [];
 var imagesArray = [];
+var ongoingArray = [];
+var namesArray = [];
 var choicesArray = [];
 var prevChoicesArray = [21, 21, 21];
 var clickCounter = 0;
@@ -16,7 +17,7 @@ var overallPercentArray = [];
 
 var startButton = document.getElementById('start_button');
 var ulEl = document.getElementById('display_images');
-var resultsButton = document.getElementById('results');
+var resultsButton = document.getElementById('results_button');
 var resultsChart = document.getElementById('chart');
 
 var imageFilePaths = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'usb.gif', 'water-can.jpg', 'wine-glass.jpg'];
@@ -39,12 +40,18 @@ function ProductImage(imgFilePath) {
   this.views = 0;
 }
 
-// Builds array of ProductImages and creates namesArray
+// Builds arrays for current and ongoing data collection. Creates namesArray.
 function buildImageObjects(array) {
   for(var i = 0; i < array.length; i++) {
     imagesArray[i] = (new ProductImage(array[i]));
     var itemName = imagesArray[i].imgFilePath.split('.')[0];
     namesArray[i] = itemName;
+  }
+  if(!localStorage.storedOngoingArray) {
+    for(var i = 0; i < array.length; i++) {
+      ongoingArray[i] = (new ProductImage(array[i]));
+      var itemName = ongoingArray[i].imgFilePath.split('.')[0];
+    }
   }
 }
 
@@ -204,7 +211,7 @@ var makeChart = function() {
 // Event Handlers
 start_button.addEventListener('click', handleSurveyStart);
 display_images.addEventListener('click', handleClick);
-results.addEventListener('click', handleDisplayResults);
+results_button.addEventListener('click', handleDisplayResults);
 
 // Call functions here:
 checkLocalStorage();

@@ -63,12 +63,13 @@ img {
   height: 300px;
 }
 
-#results {
+#results_button {
   background: #39b876;
   border: none;
   border-radius: 8px;
   clear: both;
   color: #ffffff;
+  cursor: pointer;
   display: none;
   font-size: 20px;
   padding: 10px 20px 10px 20px;
@@ -77,7 +78,7 @@ img {
   text-decoration: none;
 }
 
-#results:hover {
+#results_button:hover {
   background: #28b6c3;
   text-decoration: none;
 }

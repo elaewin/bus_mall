@@ -117,12 +117,17 @@ var calcStats = function(image) {
   var views = image.views;
   var clicks = image.clicks;
   localStorage.storedImagesArray = JSON.stringify(imagesArray);
+  localStorage.storedOngoingArray = JSON.stringify(ongoingArray);
   var percentage = clicks / views;
   if(isNaN(percentage)) {
     percentage = 0;
   }
   return [clicks, views, percentage];
 };
+
+// var updateCurrent = function () {
+//
+// }
 
 var generateStats = function() {
   for(var i = 0; i < imagesArray.length; i++) {

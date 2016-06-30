@@ -47,7 +47,7 @@ h2 {
 }
 
 p {
-  padding-bottom: 30px;
+  padding: 0 30px 30px;
   line-height: 24px;
 }
 
@@ -74,7 +74,7 @@ img {
   height: 300px;
 }
 
-#results_button {
+#results_button, #marketing_button {
   background: #39b876;
   border: none;
   border-radius: 8px;
@@ -84,12 +84,12 @@ img {
   display: none;
   font-size: 20px;
   padding: 10px 20px 10px 20px;
-  margin: 0 auto;
+  margin: 0 auto 30px;
   text-align: center;
   text-decoration: none;
 }
 
-#results_button:hover {
+#results_button:hover, #marketing_button:hover {
   background: #28b6c3;
   text-decoration: none;
 }

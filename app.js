@@ -20,12 +20,13 @@ var ulEl = document.getElementById('display_images');
 var instructions = document.getElementById('instructions');
 var resultsButton = document.getElementById('results_button');
 var resultsChart = document.getElementById('chart_container');
+var marketingButton = document.getElementById('marketing_button');
+var radarChart = document.getElementById('radar_chart');
 
 var imageFilePaths = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'usb.gif', 'water-can.jpg', 'wine-glass.jpg'];
 
 Chart.defaults.global.defaultFontFamily = 'Roboto, sans-serif';
 Chart.defaults.global.title.display = true;
-Chart.defaults.global.legend.display = true;
 
 var checkLocalStorage = function() {
   if(localStorage.storedClickCounter < 4) {
@@ -175,7 +176,17 @@ var handleDisplayResults = function(event) {
   makeOngoingPercentChart();
   ulEl.style.display = 'none';
   instructions.style.display = 'none';
+  resultsButton.style.display = 'none';
   resultsChart.style.display = 'block';
+  // marketingButton.style.display = 'block';
+};
+
+var handleMarketingResults = function(event) {
+  makeRadarChart();
+  resultsChart.style.display = 'none';
+  radarChart.style.display = 'block';
+  marketingButton.style.display = 'none';
+  resultsButton.style.display = 'block';
 };
 
 var makeCurrentClicksChart = function() {
@@ -220,7 +231,7 @@ var makeCurrentPercentChart = function() {
       labels: namesArray,
       datasets: [
         {
-          label: '',
+          label: 'Percentage of Clicks',
           backgroundColor: 'rgba(57,184, 118, 0.7)',
           borderWidth: 1,
           hoverBackgroundColor: 'rgba(253, 188, 58, 0.4)',
@@ -289,7 +300,7 @@ var makeOngoingPercentChart = function() {
       labels: namesArray,
       datasets: [
         {
-          label: '',
+          label: 'Percentage of Clicks',
           backgroundColor: 'rgba(36, 117, 75, 0.7)',
           borderWidth: 1,
           hoverBackgroundColor: 'rgba(253, 188, 58, 0.4)',
@@ -316,10 +327,42 @@ var makeOngoingPercentChart = function() {
   });
 };
 
+var makeRadarChart = function () {
+  var ctx = document.getElementById('radar_chart').getContext('2d');
+  var marketingRadarChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: namesArray,
+      datasets: [
+        {
+          label: 'Total Clicks',
+          backgroundColor: 'rgba(26, 119, 127, 0.2)',
+          pointBackgroundColor: 'rgba(26, 119, 127, 1)',
+          pointBorderColor: 'rgba(149, 226, 233, 0.8)',
+          pointHoverBackgroundColor: 'rgba(149, 226, 233, 0.8)',
+          pointHoverBorderColor: 'rgba(26, 119, 127, 1)',
+          data: totalClicksArray
+        },
+        {
+          label: 'Total Views',
+          backgroundColor: 'rgba(37, 71, 116, 0.2)',
+          pointBackgroundColor: 'rgba(37, 71, 116, 1)',
+          pointBorderColor: 'rgba(158, 187, 224, 0.8)',
+          pointHoverBackgroundColor: 'rgba(158, 187, 224, 0.8)',
+          pointHoverBorderColor: 'rgba(37, 71, 116, 1)',
+          data: totalViewsArray
+        }
+      ]
+    },
+    options: options
+  });
+};
+
 // Event Handlers
 start_button.addEventListener('click', handleSurveyStart);
 display_images.addEventListener('click', handleClick);
 results_button.addEventListener('click', handleDisplayResults);
+// marketing_button.addEventListener('click', handleMarketingResults);
 
 // Call functions here:
 checkLocalStorage();

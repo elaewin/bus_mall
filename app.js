@@ -15,14 +15,8 @@ var totalViewsArray = [];
 var overallPercentArray = [];
 
 // Variables for local storage items
-var lsImagesArray = localStorage.storedImagesArray
-var lsCurrentClicks = localStorage.storedClicksArray;
-var lsCurrentViews = localStorage.storedViewsArray;
-var lsCurrentPercent = localStorage.storedPercentsArray;
-var lsTotalClicks = localStorage.storedTotalClicksArray;
-var lsTotalViews = localStorage.storedTotalViewsArray;
-var lsOverallPercent = localStorage.storedOverallPercentArray;
-var lsClickCounter = localStorage.ClickCounter;
+// var lsImagesArray = localStorage.storedImagesArray;
+// var lsClickCounter = localStorage.ClickCounter;
 
 var startButton = document.getElementById('start_button');
 var ulEl = document.getElementById('display_images');
@@ -30,8 +24,6 @@ var resultsButton = document.getElementById('results');
 var resultsChart = document.getElementById('chart');
 
 var imageFilePaths = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'usb.gif', 'water-can.jpg', 'wine-glass.jpg'];
-
-var localStorageRetrievalArray = [[lsImagesArray, imagesArray], [lsCurrentClicks, clicksArray], [lsCurrentViews, viewsArray], [lsCurrentPercent, percentsArray], [lsTotalClicks, totalClicksArray], [lsTotalViews, totalViewsArray], [lsOverallPercent, overallPercentArray], [lsClickCounter, clickCounter]];
 
 // Constructor for image objects.
 function ProductImage(imgFilePath) {
@@ -110,7 +102,7 @@ var displayImages = function() {
 var calcStats = function(image) {
   var views = image.views;
   var clicks = image.clicks;
-  var lsImagesArray = JSON.stringify(imagesArray);
+  localStorage.storedImagesArray = JSON.stringify(imagesArray);
   var percentage = clicks / views;
   if(isNaN(percentage)) {
     percentage = 0;
@@ -158,7 +150,7 @@ var handleClick = function(event) {
         imagesArray[i].clicks++;
         generateStats();
         clickCounter += 1;
-        localStorage.ClickCounter = JSON.stringify(clickCounter);
+        localStorage.storedClickCounter = JSON.stringify(clickCounter);
         getImages();
       }
     }
@@ -213,15 +205,16 @@ start_button.addEventListener('click', handleSurveyStart);
 display_images.addEventListener('click', handleClick);
 results.addEventListener('click', handleDisplayResults);
 
-var checkLocalStorage = function(array) {
-  for(var i = 0; i < array.length; i++) {
-    if(localStorage.array[i][0]) {
-      array[i][1] = JSON.parse(localStorage.array[i][0]);
-    }
+var checkLocalStorage = function() {
+  if(localStorage.storedClickCounter) {
+    clickCounter = JSON.parse('storedClickCounter');
+  }
+  if(localStorage.storedImagesArray) {
+    imagesArray = JSON.parse('storedImagesArray');
   }
 };
 
 // Call functions here:
-checkLocalStorage(localStorageRetrievalArray);
+checkLocalStorage();
 buildImageObjects(imageFilePaths);
 getImages();

@@ -1,7 +1,5 @@
 'use strict';
 
-var imageFilePaths = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'usb.gif', 'water-can.jpg', 'wine-glass.jpg'];
-
 var namesArray = [];
 var imagesArray = [];
 var choicesArray = [];
@@ -16,12 +14,24 @@ var totalClicksArray = [];
 var totalViewsArray = [];
 var overallPercentArray = [];
 
-var localStorageNames = ['storedCurrentClicks', 'storedCurrentViews', 'storedCurrentPercent', 'storedTotalClicks', 'storedTotalViews', 'storedOverallPercent', 'storedClickCounter'];
+// Variables for local storage items
+var lsImagesArray = localStorage.storedImagesArray
+var lsCurrentClicks = localStorage.storedClicksArray;
+var lsCurrentViews = localStorage.storedViewsArray;
+var lsCurrentPercent = localStorage.storedPercentsArray;
+var lsTotalClicks = localStorage.storedTotalClicksArray;
+var lsTotalViews = localStorage.storedTotalViewsArray;
+var lsOverallPercent = localStorage.storedOverallPercentArray;
+var lsClickCounter = localStorage.ClickCounter;
 
 var startButton = document.getElementById('start_button');
 var ulEl = document.getElementById('display_images');
 var resultsButton = document.getElementById('results');
 var resultsChart = document.getElementById('chart');
+
+var imageFilePaths = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'usb.gif', 'water-can.jpg', 'wine-glass.jpg'];
+
+var localStorageRetrievalArray = [[lsImagesArray, imagesArray], [lsCurrentClicks, clicksArray], [lsCurrentViews, viewsArray], [lsCurrentPercent, percentsArray], [lsTotalClicks, totalClicksArray], [lsTotalViews, totalViewsArray], [lsOverallPercent, overallPercentArray], [lsClickCounter, clickCounter]];
 
 // Constructor for image objects.
 function ProductImage(imgFilePath) {
@@ -100,6 +110,7 @@ var displayImages = function() {
 var calcStats = function(image) {
   var views = image.views;
   var clicks = image.clicks;
+  var lsImagesArray = JSON.stringify(imagesArray);
   var percentage = clicks / views;
   if(isNaN(percentage)) {
     percentage = 0;
@@ -111,7 +122,7 @@ var generateStats = function() {
   for(var i = 0; i < imagesArray.length; i++) {
     var imageStats = calcStats(imagesArray[i]);
     var itemClicks = imageStats[0];
-    clicksArray[i] = itemClicks
+    clicksArray[i] = itemClicks;
     if(isNaN(totalClicksArray[i])) {
       totalClicksArray[i] = 0;
     }
@@ -126,12 +137,12 @@ var generateStats = function() {
     percentsArray[i] = percentage;
     overallPercentArray[i] = (totalClicksArray[i] / totalViewsArray[i]).toFixed(2) * 100;
   }
-  // localStorage.storedCurrentClicks = JSON.stringify(clicksArray);
-  // localStorage.storedCurrentViews = JSON.stringify(viewsArray);
-  // localStorage.storedCurrentPercent = JSON.stringify(percentsArray);
-  // localStorage.storedTotalClicks = JSON.stringify(totalClicksArray);
-  // localStorage.storedTotalViews = JSON.stringify(totalViewsArray);
-  // localStorage.storedOverallPercent = JSON.stringify(overallPercentArray);
+  var lsCurrentClicks = JSON.stringify(clicksArray);
+  var lsCurrentViews = JSON.stringify(viewsArray);
+  var lsCurrentPercent = JSON.stringify(percentsArray);
+  var lsTotalClicks = JSON.stringify(totalClicksArray);
+  var lsTotalViews = JSON.stringify(totalViewsArray);
+  var lsOverallPercent = JSON.stringify(overallPercentArray);
 };
 
 var handleSurveyStart = function(event) {
@@ -147,7 +158,7 @@ var handleClick = function(event) {
         imagesArray[i].clicks++;
         generateStats();
         clickCounter += 1;
-        localStorage.storedClickCounter = JSON.stringify(clickCounter);
+        localStorage.ClickCounter = JSON.stringify(clickCounter);
         getImages();
       }
     }
@@ -202,13 +213,15 @@ start_button.addEventListener('click', handleSurveyStart);
 display_images.addEventListener('click', handleClick);
 results.addEventListener('click', handleDisplayResults);
 
-var checkLocalStorage = function() {
-  if(localStorage.storedClickCounter) {
-    clickCounter = JSON.parse(localStorage.getItem('storedClickCounter'));
+var checkLocalStorage = function(array) {
+  for(var i = 0; i < array.length; i++) {
+    if(localStorage.array[i][0]) {
+      array[i][1] = JSON.parse(localStorage.array[i][0]);
+    }
   }
 };
 
 // Call functions here:
-checkLocalStorage();
+checkLocalStorage(localStorageRetrievalArray);
 buildImageObjects(imageFilePaths);
 getImages();

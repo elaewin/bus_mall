@@ -7,7 +7,6 @@ var choicesArray = [];
 var prevChoicesArray = [21, 21, 21];
 var clickCounter = 0;
 
-// Variables for showing chart data;
 var clicksArray = [];
 var viewsArray = [];
 var percentsArray = [];
@@ -21,7 +20,6 @@ var instructions = document.getElementById('instructions');
 var resultsButton = document.getElementById('results_button');
 var resultsChart = document.getElementById('chart_container');
 var marketingButton = document.getElementById('marketing_button');
-var radarChart = document.getElementById('radar_chart');
 
 var imageFilePaths = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'usb.gif', 'water-can.jpg', 'wine-glass.jpg'];
 
@@ -39,14 +37,12 @@ var checkLocalStorage = function() {
   }
 };
 
-// Constructor for image objects.
 function ProductImage(imgFilePath) {
   this.imgFilePath = imgFilePath;
   this.clicks = 0;
   this.views = 0;
 }
 
-// Builds arrays for current and ongoing data collection. Creates namesArray.
 function buildImageObjects(array) {
   for(var i = 0; i < array.length; i++) {
     imagesArray[i] = (new ProductImage(array[i]));
@@ -61,7 +57,6 @@ function buildImageObjects(array) {
   }
 }
 
-// Builds an element and adds it to another element, attribute optional
 function buildElement(kind, content, where, attName, attValue, id) {
   var x = document.createElement(kind);
   x.textContent = content;
@@ -74,12 +69,10 @@ function buildElement(kind, content, where, attName, attValue, id) {
   where.appendChild(x);
 }
 
-// Returns a random integer between min (included) and max (excluded)
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-// Checks for an item in an array.
 var checkContent = function(index, array) {
   var result = false;
   for(var i = 0; i < array.length; i++) {
@@ -89,7 +82,6 @@ var checkContent = function(index, array) {
   return result;
 };
 
-// Generates 3 random images and updates the DOM
 var getImages = function() {
   ulEl.innerHTML = '';
   var choicesCounter = 0;
@@ -109,7 +101,6 @@ var getImages = function() {
   }
 };
 
-// Adds image to the DOM
 var displayImages = function() {
   ulEl.innerHTML = '';
   for(var i = 0; i < choicesArray.length; i++) {
@@ -179,7 +170,6 @@ var handleDisplayResults = function(event) {
   instructions.style.display = 'none';
   resultsButton.style.display = 'none';
   resultsChart.style.display = 'block';
-  // marketingButton.style.display = 'block';
 };
 
 var handleMarketingResults = function(event) {
@@ -328,44 +318,10 @@ var makeOngoingPercentChart = function() {
   });
 };
 
-var makeRadarChart = function () {
-  var ctx = document.getElementById('radar_chart').getContext('2d');
-  var marketingRadarChart = new Chart(ctx, {
-    type: 'radar',
-    data: {
-      labels: namesArray,
-      datasets: [
-        {
-          label: 'Total Clicks',
-          backgroundColor: 'rgba(26, 119, 127, 0.2)',
-          pointBackgroundColor: 'rgba(26, 119, 127, 1)',
-          pointBorderColor: 'rgba(149, 226, 233, 0.8)',
-          pointHoverBackgroundColor: 'rgba(149, 226, 233, 0.8)',
-          pointHoverBorderColor: 'rgba(26, 119, 127, 1)',
-          data: totalClicksArray
-        },
-        {
-          label: 'Total Views',
-          backgroundColor: 'rgba(37, 71, 116, 0.2)',
-          pointBackgroundColor: 'rgba(37, 71, 116, 1)',
-          pointBorderColor: 'rgba(158, 187, 224, 0.8)',
-          pointHoverBackgroundColor: 'rgba(158, 187, 224, 0.8)',
-          pointHoverBorderColor: 'rgba(37, 71, 116, 1)',
-          data: totalViewsArray
-        }
-      ]
-    },
-    options: options
-  });
-};
-
-// Event Handlers
 start_button.addEventListener('click', handleSurveyStart);
 display_images.addEventListener('click', handleClick);
 results_button.addEventListener('click', handleDisplayResults);
-// marketing_button.addEventListener('click', handleMarketingResults);
 
-// Call functions here:
 checkLocalStorage();
 buildImageObjects(imageFilePaths);
 getImages();

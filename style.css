@@ -74,7 +74,7 @@ img {
   height: 300px;
 }
 
-#results_button, #marketing_button {
+#results_button {
   background: #39b876;
   border: none;
   border-radius: 8px;
@@ -89,7 +89,7 @@ img {
   text-decoration: none;
 }
 
-#results_button:hover, #marketing_button:hover {
+#results_button:hover {
   background: #28b6c3;
   text-decoration: none;
 }

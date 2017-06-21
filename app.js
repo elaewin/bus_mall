@@ -63,15 +63,15 @@ function buildImageObjects(array) {
 
 // Builds an element and adds it to another element, attribute optional
 function buildElement(kind, content, where, attName, attValue, id) {
-  var x = document.createElement(kind);
-  x.textContent = content;
+  var element = document.createElement(kind);
+  element.textContent = content;
   if(id) {
-    x.id = id;
+    element.id = id;
   }
   if(attName && attValue) {
-    x.setAttribute(attName, attValue);
+    element.setAttribute(attName, attValue);
   }
-  where.appendChild(x);
+  where.appendChild(element);
 }
 
 // Returns a random integer between min (included) and max (excluded)
